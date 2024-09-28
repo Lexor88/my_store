@@ -1,7 +1,6 @@
-{% load custom_tags %}
-
 <!-- products/homepage.html -->
 {% extends 'products/base.html' %}
+{% load custom_tags %}
 
 {% block title %}Добро пожаловать в магазин{% endblock %}
 
@@ -9,13 +8,16 @@
 <h1>Добро пожаловать в магазин</h1>
 <p>Это домашняя страница.</p>
 
+<!-- Ссылка для добавления нового продукта -->
+<a href="{% url 'add_product' %}">Добавить новый продукт</a>
+
 <!-- Список товаров -->
 <h2>Наши товары</h2>
 <ul>
     {% for product in products %}
         <li>
             <h3>{{ product.name }}</h3>
-            <p>{{ product.description|slice:":100" }}...</p> <!-- Обрезаем описание до 100 символов -->
+            <p>{{ product.description|slice:":100" }}...</p>
             <p>Цена: ${{ product.price }}</p>
 
             <!-- Проверяем наличие изображения и выводим его -->
@@ -29,4 +31,23 @@
         <p>Товары отсутствуют.</p>
     {% endfor %}
 </ul>
+
+<!-- Пагинация -->
+<div class="pagination">
+    <span class="step-links">
+        {% if products.has_previous %}
+            <a href="?page=1">Первая</a>
+            <a href="?page={{ products.previous_page_number }}">Назад</a>
+        {% endif %}
+
+        <span class="current">
+            Страница {{ products.number }} из {{ products.paginator.num_pages }}
+        </span>
+
+        {% if products.has_next %}
+            <a href="?page={{ products.next_page_number }}">Вперед</a>
+            <a href="?page={{ products.paginator.num_pages }}">Последняя</a>
+        {% endif %}
+    </span>
+</div>
 {% endblock %}
