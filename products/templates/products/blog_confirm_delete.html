@@ -1,0 +1,14 @@
+<!-- products/templates/products/blog_confirm_delete.html -->
+{% extends 'products/base.html' %}
+{% block title %}Удалить {{ blog_post.title }}?{% endblock %}
+
+{% block content %}
+    <h1>Удалить "{{ blog_post.title }}"?</h1>
+    <p>Вы уверены, что хотите удалить эту запись?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Да, удалить</button>
+    </form>
+    <a href="{% url 'blog_detail' blog_post.slug %}">Отмена</a>
+{% endblock %}

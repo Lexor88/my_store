@@ -1,0 +1,47 @@
+<!-- products/templates/products/blog_form.html -->
+{% extends 'products/base.html' %}
+{% block title %}Создать новую статью{% endblock %}
+
+{% block content %}
+    <h1>{{ view.title }}</h1>
+    <form method="post" enctype="multipart/form-data" class="form-group">
+        {% csrf_token %}
+
+        <!-- Если есть ошибки, выводим их здесь -->
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <!-- Отображение полей формы -->
+        <div class="mb-3">
+            {{ form.title.label_tag }} <!-- Метка для заголовка -->
+            {{ form.title }}
+        </div>
+        <div class="mb-3">
+            {{ form.content.label_tag }} <!-- Метка для содержания -->
+            {{ form.content }}
+        </div>
+        <div class="mb-3">
+            {{ form.preview_image.label_tag }} <!-- Метка для изображения -->
+            {{ form.preview_image }}
+        </div>
+        <div class="mb-3">
+            {{ form.published.label_tag }} <!-- Метка для публикации -->
+            {{ form.published }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{% url 'blog_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+{% endblock %}
