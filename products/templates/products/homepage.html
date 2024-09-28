@@ -1,0 +1,32 @@
+{% load custom_tags %}
+
+<!-- products/homepage.html -->
+{% extends 'products/base.html' %}
+
+{% block title %}Добро пожаловать в магазин{% endblock %}
+
+{% block content %}
+<h1>Добро пожаловать в магазин</h1>
+<p>Это домашняя страница.</p>
+
+<!-- Список товаров -->
+<h2>Наши товары</h2>
+<ul>
+    {% for product in products %}
+        <li>
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description|slice:":100" }}...</p> <!-- Обрезаем описание до 100 символов -->
+            <p>Цена: ${{ product.price }}</p>
+
+            <!-- Проверяем наличие изображения и выводим его -->
+            {% if product.image %}
+                <img src="{{ product.image.url|media_path }}" alt="{{ product.name }}" style="max-width: 300px; height: auto;">
+            {% endif %}
+
+            <a href="{% url 'product_detail' product.pk %}">Подробнее</a>
+        </li>
+    {% empty %}
+        <p>Товары отсутствуют.</p>
+    {% endfor %}
+</ul>
+{% endblock %}
