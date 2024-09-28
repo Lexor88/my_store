@@ -55,14 +55,14 @@ class BlogPostDetailView(DetailView):
 
         print(f"Просмотры: {obj.views}")  # Отладочное сообщение для проверки количества просмотров
 
-        if obj.views == 15:  # Изменено на 15 просмотров для проверки
+        if obj.views == 100:
             print("Достигнуто 15 просмотров. Попытка отправить письмо...")  # Отладочное сообщение
             try:
                 send_mail(
                     'Поздравляем! 15 просмотров',
-                    f'Ваша статья "{obj.title}" достигла 15 просмотров!',
+                    f'Ваша статья "{obj.title}" достигла 100 просмотров!',
                     settings.DEFAULT_FROM_EMAIL,
-                    ['maksimleksin88@yandex.ru'],  # Укажите ваш email здесь
+                    ['maksimleksin88@yandex.ru'],  # email здесь
                     fail_silently=False,
                 )
                 print("Письмо успешно отправлено.")  # Отладочное сообщение
