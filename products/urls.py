@@ -1,9 +1,8 @@
-# products/urls.py
 from django.urls import path
 from .views import (
     ProductListView, ProductDetailView, ProductCreateView,
     BlogPostListView, BlogPostDetailView, BlogPostCreateView,
-    BlogPostUpdateView, BlogPostDeleteView
+    BlogPostUpdateView, BlogPostDeleteView, ContactView  # Импортируйте ContactView
 )
 
 urlpatterns = [
@@ -20,4 +19,7 @@ urlpatterns = [
     path('blog/<slug:slug>/', BlogPostDetailView.as_view(), name='blog_detail'),
     path('blog/<slug:slug>/update/', BlogPostUpdateView.as_view(), name='blog_update'),
     path('blog/<slug:slug>/delete/', BlogPostDeleteView.as_view(), name='blog_delete'),
+
+    # Маршрут для страницы контактов
+    path('contact/', ContactView.as_view(), name='contact'),  # Добавьте этот маршрут
 ]

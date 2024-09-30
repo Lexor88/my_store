@@ -1,12 +1,16 @@
+from django.urls import reverse_lazy
+from django.views.generic import (
+    ListView, DetailView, CreateView,
+    UpdateView, DeleteView, TemplateView
+)
+from django.utils.text import slugify
 from django.core.mail import send_mail
 from django.conf import settings
-from smtplib import SMTPException  # Исправленный импорт
-from django.views.generic import (ListView, DetailView, CreateView,
-                                  UpdateView, DeleteView)
-from django.urls import reverse_lazy
+from smtplib import SMTPException
+
 from .models import Product, BlogPost
 from .forms import ProductForm, BlogPostForm
-from django.utils.text import slugify
+from .utils import send_letter_about_reaching_certain_number_of_views  # Импортируем функцию
 
 
 # Отображение главной страницы с товарами
@@ -18,6 +22,11 @@ class ProductListView(ListView):
 
     def get_queryset(self):
         return Product.objects.order_by('id')  # Упорядочивание по id
+
+
+# Контроллер для страницы контактов
+class ContactView(TemplateView):
+    template_name = 'products/contact.html'  # Убедитесь, что этот шаблон существует
 
 
 # Детальное отображение продукта
@@ -59,16 +68,10 @@ class BlogPostDetailView(DetailView):
         print(f"Просмотры: {obj.views}")  # сообщение для проверки количества просмотров
 
         if obj.views == 100:
-            print("Достигнуто 100 просмотров. Попытка отправить письмо...")  # Отладочное сообщение
+            print("Достигнуто 100 просмотров. Попытка отправить письмо...")
             try:
-                send_mail(
-                    'Поздравляем! 100 просмотров',
-                    f'Ваша статья "{obj.title}" достигла 100 просмотров!',
-                    settings.DEFAULT_FROM_EMAIL,
-                    ['maksimleksin88@yandex.ru'],  # email здесь
-                    fail_silently=False,
-                )
-                print("Письмо успешно отправлено.")  # Отладочное сообщение
+                send_letter_about_reaching_certain_number_of_views(obj.id, obj.views)
+                print("Письмо успешно отправлено.")
             except SMTPException as e:
                 print(f"Ошибка SMTP при отправке письма: {e}")
             except Exception as e:
@@ -85,7 +88,6 @@ class BlogPostCreateView(CreateView):
     success_url = reverse_lazy('blog_list')
 
     def form_valid(self, form):
-        # Автоматическое создание slug из заголовка
         blog_post = form.save(commit=False)
         blog_post.slug = slugify(blog_post.title)
         blog_post.save()

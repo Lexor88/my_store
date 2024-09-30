@@ -1,4 +1,3 @@
-# products/models.py
 from django.db import models
 from django.utils.text import slugify
 
@@ -17,7 +16,7 @@ class Product(models.Model):
 # Новая модель блога
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
+    slug = models.CharField(max_length=200, unique=True, blank=True)  # Изменено на CharField
     content = models.TextField()
     preview_image = models.ImageField(upload_to='blog_previews/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
