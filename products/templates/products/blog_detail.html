@@ -3,22 +3,22 @@
 {% block title %}{{ blog_post.title }}{% endblock %}
 
 {% block content %}
-    <h1>{{ blog_post.title }}</h1>
+<h1>{{ blog_post.title }}</h1>
 
-    <!-- Проверяем наличие превью-изображения перед отображением -->
-    {% if blog_post.preview_image %}
-        <img src="{{ blog_post.preview_image.url }}" alt="{{ blog_post.title }}" style="max-width: 500px; height: auto;">
-    {% endif %}
+<!-- Проверяем наличие превью-изображения перед отображением -->
+{% if blog_post.preview_image %}
+<img src="{{ blog_post.preview_image.url }}" alt="{{ blog_post.title }}" style="max-width: 500px; height: auto;">
+{% endif %}
 
-    <p>{{ blog_post.content }}</p>
-    <p>Дата публикации: {{ blog_post.created_at }}</p>
-    <p>Просмотры: {{ blog_post.views }}</p>
+<p>{{ blog_post.content }}</p>
+<p>Дата публикации: {{ blog_post.created_at }}</p>
+<p>Просмотры: {{ blog_post.views }}</p>
 
-    <!-- Проверяем наличие slug перед отображением ссылок -->
-    {% if blog_post.slug %}
-        <a href="{% url 'blog_update' blog_post.slug %}">Редактировать</a> |
-        <a href="{% url 'blog_delete' blog_post.slug %}">Удалить</a>
-    {% endif %}
+<!-- Проверяем наличие slug перед отображением ссылок -->
+{% if blog_post.slug %}
+<a href="{% url 'blog_update' blog_post.slug %}">Редактировать</a> |
+<a href="{% url 'blog_delete' blog_post.slug %}">Удалить</a>
+{% endif %}
 
-    <a href="{% url 'blog_list' %}">Вернуться к списку блогов</a>
+<a href="{% url 'blog_list' %}">Вернуться к списку блогов</a>
 {% endblock %}

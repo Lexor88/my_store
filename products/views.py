@@ -1,8 +1,8 @@
 from django.core.mail import send_mail
 from django.conf import settings
 from smtplib import SMTPException  # Исправленный импорт
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.shortcuts import redirect
+from django.views.generic import (ListView, DetailView, CreateView,
+                                  UpdateView, DeleteView)
 from django.urls import reverse_lazy
 from .models import Product, BlogPost
 from .forms import ProductForm, BlogPostForm
@@ -15,6 +15,9 @@ class ProductListView(ListView):
     template_name = 'products/homepage.html'
     context_object_name = 'products'
     paginate_by = 5
+
+    def get_queryset(self):
+        return Product.objects.order_by('id')  # Упорядочивание по id
 
 
 # Детальное отображение продукта
@@ -40,7 +43,7 @@ class BlogPostListView(ListView):
 
     # Фильтрация только опубликованных блогов
     def get_queryset(self):
-        return BlogPost.objects.filter(is_published=True)
+        return BlogPost.objects.filter(is_published=True).order_by('-created_at')  # Упорядочивание по дате создания
 
 
 # Детальное отображение блога с увеличением счетчика просмотров
@@ -53,13 +56,13 @@ class BlogPostDetailView(DetailView):
         obj.views += 1
         obj.save()
 
-        print(f"Просмотры: {obj.views}")  # Отладочное сообщение для проверки количества просмотров
+        print(f"Просмотры: {obj.views}")  # сообщение для проверки количества просмотров
 
         if obj.views == 100:
-            print("Достигнуто 15 просмотров. Попытка отправить письмо...")  # Отладочное сообщение
+            print("Достигнуто 100 просмотров. Попытка отправить письмо...")  # Отладочное сообщение
             try:
                 send_mail(
-                    'Поздравляем! 15 просмотров',
+                    'Поздравляем! 100 просмотров',
                     f'Ваша статья "{obj.title}" достигла 100 просмотров!',
                     settings.DEFAULT_FROM_EMAIL,
                     ['maksimleksin88@yandex.ru'],  # email здесь
@@ -72,6 +75,8 @@ class BlogPostDetailView(DetailView):
                 print(f"Общая ошибка при отправке письма: {e}")
 
         return obj
+
+
 # Создание нового блога
 class BlogPostCreateView(CreateView):
     model = BlogPost

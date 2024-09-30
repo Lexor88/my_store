@@ -1,0 +1,10 @@
+[flake8]
+exclude =
+    __pycache__,
+    *.pyc,
+    *.pyo,
+    migrations/*,
+    old/*,
+    build/*,
+    dist/*,
+    другие_необходимые_каталоги_или_файлы

@@ -7,11 +7,11 @@
     <title>{{ object.name }}</title>
 </head>
 <body>
-    <h1>{{ object.name }}</h1>
-    <p>{{ object.description }}</p>
-    <p>Price: ${{ object.price }}</p>
-    {% if object.image %}
-        <img src="{{ object.image.url }}" alt="{{ object.name }}">
-    {% endif %}
+<h1>{{ object.name }}</h1>
+<p>{{ object.description }}</p>
+<p>Price: ${{ object.price }}</p>
+{% if object.image %}
+<img src="{{ object.image.url }}" alt="{{ object.name }}">
+{% endif %}
 </body>
 </html>

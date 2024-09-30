@@ -3,35 +3,36 @@
 {% block title %}Блог{% endblock %}
 
 {% block content %}
-    <h1>Блог</h1>
-    <a href="{% url 'blog_create' %}">Добавить новую статью</a>
-    <ul>
-        {% for blog_post in blog_posts %}
-            <li>
-                <h2><a href="{% url 'blog_detail' blog_post.slug %}">{{ blog_post.title }}</a></h2>
+<h1>Блог</h1>
+<a href="{% url 'blog_create' %}">Добавить новую статью</a>
+<ul>
+    {% for blog_post in blog_posts %}
+    <li>
+        <h2><a href="{% url 'blog_detail' blog_post.slug %}">{{ blog_post.title }}</a></h2>
 
-                <!-- Проверяем наличие превью-изображения и выводим его -->
-                {% if blog_post.preview_image %}
-                    <img src="{{ blog_post.preview_image.url }}" alt="{{ blog_post.title }}" style="max-width: 300px; height: auto;">
-                {% endif %}
+        <!-- Проверяем наличие превью-изображения и выводим его -->
+        {% if blog_post.preview_image %}
+        <img src="{{ blog_post.preview_image.url }}" alt="{{ blog_post.title }}"
+             style="max-width: 300px; height: auto;">
+        {% endif %}
 
-                <p>{{ blog_post.content|slice:":200" }}...</p>
+        <p>{{ blog_post.content|slice:":200" }}...</p>
 
-                <p>Дата публикации: {{ blog_post.created_at }}</p>
-                <p>Просмотры: {{ blog_post.views }}</p>
+        <p>Дата публикации: {{ blog_post.created_at }}</p>
+        <p>Просмотры: {{ blog_post.views }}</p>
 
-                {% if blog_post.slug %}
-                    <a href="{% url 'blog_update' blog_post.slug %}">Редактировать</a> |
-                    <a href="{% url 'blog_delete' blog_post.slug %}">Удалить</a>
-                {% endif %}
-            </li>
-        {% empty %}
-            <p>Записи в блоге отсутствуют.</p>
-        {% endfor %}
-    </ul>
+        {% if blog_post.slug %}
+        <a href="{% url 'blog_update' blog_post.slug %}">Редактировать</a> |
+        <a href="{% url 'blog_delete' blog_post.slug %}">Удалить</a>
+        {% endif %}
+    </li>
+    {% empty %}
+    <p>Записи в блоге отсутствуют.</p>
+    {% endfor %}
+</ul>
 
-    <!-- Пагинация -->
-    <div class="pagination">
+<!-- Пагинация -->
+<div class="pagination">
         <span class="step-links">
             {% if blog_posts.has_previous %}
                 <a href="?page=1">Первая</a>
@@ -47,5 +48,5 @@
                 <a href="?page={{ blog_posts.paginator.num_pages }}">Последняя</a>
             {% endif %}
         </span>
-    </div>
+</div>
 {% endblock %}

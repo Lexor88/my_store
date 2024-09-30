@@ -9,29 +9,28 @@
 <p>Это домашняя страница.</p>
 
 <!-- Ссылка на блог -->
-<a href="{% url 'blog_list' %}">Блог</a> | <!-- Добавляем ссылку на блог -->
-
-<!-- Ссылка для добавления нового продукта -->
+<a href="{% url 'blog_list' %}">Блог</a> |
+<!-- Добавляем ссылку на блог -->
 <a href="{% url 'add_product' %}">Добавить новый продукт</a>
 
 <!-- Список товаров -->
 <h2>Наши товары</h2>
 <ul>
     {% for product in products %}
-        <li>
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.description|slice:":100" }}...</p>
-            <p>Цена: ${{ product.price }}</p>
+    <li>
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.description|slice:":100" }}...</p>
+        <p>Цена: ${{ product.price }}</p>
 
-            <!-- Проверяем наличие изображения и выводим его -->
-            {% if product.image %}
-                <img src="{{ product.image.url|media_path }}" alt="{{ product.name }}" style="max-width: 300px; height: auto;">
-            {% endif %}
+        <!-- Проверяем наличие изображения и выводим его -->
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px; height: auto;">
+        {% endif %}
 
-            <a href="{% url 'product_detail' product.pk %}">Подробнее</a>
-        </li>
+        <a href="{% url 'product_detail' product.pk %}">Подробнее</a>
+    </li>
     {% empty %}
-        <p>Товары отсутствуют.</p>
+    <p>Товары отсутствуют.</p>
     {% endfor %}
 </ul>
 
