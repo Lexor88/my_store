@@ -1,0 +1,15 @@
+{% extends 'products/base.html' %}
+
+{% block title %}{{ object|yesno:"Редактирование версии,Создание версии" }}{% endblock %}
+
+{% block content %}
+<h2>{% if object %}Редактировать{% else %}Создать{% endif %} версию</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- Отображаем все поля формы -->
+
+    <!-- Добавляем кнопку для отправки формы -->
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+<a href="{% url 'homepage' %}" class="btn btn-secondary">Назад</a>
+{% endblock %}

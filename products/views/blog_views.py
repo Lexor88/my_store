@@ -1,46 +1,11 @@
 from django.urls import reverse_lazy
-from django.views.generic import (
-    ListView, DetailView, CreateView,
-    UpdateView, DeleteView, TemplateView
-)
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.utils.text import slugify
 from django.core.mail import send_mail
-from django.conf import settings
 from smtplib import SMTPException
-
-from .models import Product, BlogPost
-from .forms import ProductForm, BlogPostForm
-from .utils import send_letter_about_reaching_certain_number_of_views  # Импортируем функцию
-
-
-# Отображение главной страницы с товарами
-class ProductListView(ListView):
-    model = Product
-    template_name = 'products/homepage.html'
-    context_object_name = 'products'
-    paginate_by = 5
-
-    def get_queryset(self):
-        return Product.objects.order_by('id')  # Упорядочивание по id
-
-
-# Контроллер для страницы контактов
-class ContactView(TemplateView):
-    template_name = 'products/contact.html'  # Убедитесь, что этот шаблон существует
-
-
-# Детальное отображение продукта
-class ProductDetailView(DetailView):
-    model = Product
-    template_name = 'products/product_detail.html'
-
-
-# Создание нового продукта
-class ProductCreateView(CreateView):
-    model = Product
-    form_class = ProductForm
-    template_name = 'products/add_product.html'
-    success_url = reverse_lazy('homepage')
+from products.models import BlogPost
+from products.forms import BlogPostForm
+from products.utils import send_letter_about_reaching_certain_number_of_views
 
 
 # Отображение списка блогов
@@ -50,9 +15,8 @@ class BlogPostListView(ListView):
     context_object_name = 'blog_posts'
     paginate_by = 5
 
-    # Фильтрация только опубликованных блогов
     def get_queryset(self):
-        return BlogPost.objects.filter(is_published=True).order_by('-created_at')  # Упорядочивание по дате создания
+        return BlogPost.objects.filter(is_published=True).order_by('-created_at')
 
 
 # Детальное отображение блога с увеличением счетчика просмотров
@@ -64,8 +28,7 @@ class BlogPostDetailView(DetailView):
         obj = super().get_object(queryset)
         obj.views += 1
         obj.save()
-
-        print(f"Просмотры: {obj.views}")  # сообщение для проверки количества просмотров
+        print(f"Просмотры: {obj.views}")
 
         if obj.views == 100:
             print("Достигнуто 100 просмотров. Попытка отправить письмо...")

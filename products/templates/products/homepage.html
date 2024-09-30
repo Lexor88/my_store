@@ -1,54 +1,76 @@
-<!-- products/homepage.html -->
 {% extends 'products/base.html' %}
+{% load static %}
 {% load custom_tags %}
 
 {% block title %}Добро пожаловать в магазин{% endblock %}
 
 {% block content %}
-<h1>Добро пожаловать в магазин</h1>
-<p>Это домашняя страница.</p>
+<div class="text-center mb-4">
+    <h1 class="display-4">Добро пожаловать в магазин</h1>
+    <p class="lead">Это домашняя страница.</p>
 
-<!-- Ссылка на блог -->
-<a href="{% url 'blog_list' %}">Блог</a> |
-<!-- Добавляем ссылку на блог -->
-<a href="{% url 'add_product' %}">Добавить новый продукт</a>
+    <!-- Ссылки на различные разделы -->
+    <div class="mb-3">
+        <a href="{% url 'blog_list' %}" class="btn btn-info">Блог</a>
+        <a href="{% url 'add_product' %}" class="btn btn-success">Добавить новый продукт</a>
+        <a href="{% url 'add_version' %}" class="btn btn-warning">Добавить новую версию</a>
+    </div>
+</div>
 
-<!-- Список товаров -->
-<h2>Наши товары</h2>
-<ul>
-    {% for product in products %}
-    <li>
-        <h3>{{ product.name }}</h3>
-        <p>{{ product.description|slice:":100" }}...</p>
-        <p>Цена: ${{ product.price }}</p>
-
-        <!-- Проверяем наличие изображения и выводим его -->
-        {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px; height: auto;">
-        {% endif %}
-
-        <a href="{% url 'product_detail' product.pk %}">Подробнее</a>
-    </li>
-    {% empty %}
-    <p>Товары отсутствуют.</p>
-    {% endfor %}
-</ul>
+<div class="container">
+    <h2 class="text-light">Наши товары</h2>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4"> <!-- Изменяем на col-md-4 для 3-х колонок -->
+            <div class="card" style="height: auto;">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
+                     style="height: 300px; object-fit: cover;"> <!-- Увеличиваем высоту изображения -->
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|slice:":100" }}...</p>
+                    <p class="card-text"><strong>Цена:</strong> ${{ product.price }}</p>
+                    {% if product.active_version %}
+                    <p class="card-text">Текущая версия: {{ product.active_version.version_name }} (v{{
+                        product.active_version.version_number }})</p>
+                    {% else %}
+                    <p class="card-text text-danger">Нет текущей версии</p>
+                    {% endif %}
+                    <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary">Подробнее</a>
+                </div>
+                <div class="card-footer">
+                    <h6 class="text-info">Выберите версию:</h6>
+                    <form method="post" action="{% url 'set_active_version' %}">
+                        {% csrf_token %}
+                        {% for version in product.versions.all %}
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="active_version" value="{{ version.pk }}"
+                                   {% if version.is_current_version %}checked{% endif %}>
+                            <label class="form-check-label">{{ version.version_name }} (v{{ version.version_number
+                                }})</label>
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-success mt-2">Выбрать активную версию</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-light">Товары отсутствуют.</p>
+        {% endfor %}
+    </div>
+</div>
 
 <!-- Пагинация -->
-<div class="pagination">
+<div class="pagination text-center mt-4">
     <span class="step-links">
         {% if products.has_previous %}
-            <a href="?page=1">Первая</a>
-            <a href="?page={{ products.previous_page_number }}">Назад</a>
+        <a href="?page=1" class="btn btn-secondary">Первая</a>
+        <a href="?page={{ products.previous_page_number }}" class="btn btn-secondary">Назад</a>
         {% endif %}
-
-        <span class="current">
-            Страница {{ products.number }} из {{ products.paginator.num_pages }}
-        </span>
-
+        <span class="current">Страница {{ products.number }} из {{ products.paginator.num_pages }}</span>
         {% if products.has_next %}
-            <a href="?page={{ products.next_page_number }}">Вперед</a>
-            <a href="?page={{ products.paginator.num_pages }}">Последняя</a>
+        <a href="?page={{ products.next_page_number }}" class="btn btn-secondary">Вперед</a>
+        <a href="?page={{ products.paginator.num_pages }}" class="btn btn-secondary">Последняя</a>
         {% endif %}
     </span>
 </div>

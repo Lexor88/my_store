@@ -1,0 +1,10 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<h2>Вы уверены, что хотите удалить версию "{{ object.version_name }}" (v{{ object.version_number }})?</h2>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Удалить</button>
+</form>
+<a href="{% url 'homepage' %}" class="btn btn-secondary">Отмена</a>
+{% endblock %}

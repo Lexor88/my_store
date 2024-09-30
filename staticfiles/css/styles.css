@@ -1,0 +1,54 @@
+/* Общие стили для страницы */
+body {
+    background-color: #0e0e0e; /* Темный фон для всего сайта */
+    color: #ffffff; /* Основной цвет текста - белый */
+    font-family: Arial, sans-serif;
+}
+
+/* Стили контейнера */
+.container {
+    background: rgba(50, 50, 50, 0.8); /* Темно-серый полупрозрачный фон */
+    padding: 20px;
+    border-radius: 8px; /* Закругленные углы */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Добавляем тень */
+}
+
+/* Стили заголовков */
+h1, h2, h5 {
+    color: #f0f0f0; /* Светло-серый цвет для заголовков */
+    text-transform: uppercase; /* Заглавные буквы для заголовков */
+    font-weight: bold;
+}
+
+/* Стили текста в карточках */
+.card-text, .card-title, .card-footer {
+    color: #dcdcdc; /* Светло-серый цвет текста внутри карточек */
+}
+
+/* Стили карточек */
+.card {
+    background: rgba(30, 30, 30, 0.9); /* Полупрозрачный темно-серый фон для карточек */
+    border: none;
+    border-radius: 10px; /* Закругленные края */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Тень для карточек */
+    margin-bottom: 15px; /* Отступ снизу для карточек */
+}
+
+/* Стили кнопок */
+.btn {
+    background-color: #0072ff; /* Синий цвет для кнопок */
+    color: white;
+    border-radius: 20px; /* Закругленные углы */
+    padding: 10px 20px;
+    border: none;
+    transition: background-color 0.3s ease; /* Плавный переход цвета */
+}
+
+.btn:hover {
+    background-color: #005bb5; /* Более темный синий при наведении */
+}
+
+/* Дополнительные стили */
+.pagination .current {
+    color: #0072ff; /* Синий цвет для текущей страницы в пагинации */
+}

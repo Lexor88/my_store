@@ -8,12 +8,13 @@ class Product(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
+    category = models.CharField(max_length=100, default='Uncategorized')  # По умолчанию
 
     def __str__(self):
         return self.name
 
 
-# Новая модель блога
+# Модель блога
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     slug = models.CharField(max_length=200, unique=True, blank=True)  # Изменено на CharField
@@ -30,3 +31,13 @@ class BlogPost(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+
+class Version(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='versions')
+    version_number = models.CharField(max_length=50)
+    version_name = models.CharField(max_length=100)
+    is_current_version = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.version_name} (v{self.version_number})"

@@ -1,17 +1,18 @@
-<!-- products/product_detail.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ object.name }}</title>
-</head>
-<body>
-<h1>{{ object.name }}</h1>
-<p>{{ object.description }}</p>
-<p>Price: ${{ object.price }}</p>
-{% if object.image %}
-<img src="{{ object.image.url }}" alt="{{ object.name }}">
-{% endif %}
-</body>
-</html>
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block title %}{{ object.name }} - Подробности{% endblock %}
+
+{% block content %}
+<div class="container product-detail">
+    <h1 class="display-4">{{ object.name }}</h1>
+    <p class="lead">{{ object.description }}</p>
+    <p class="price"><strong>Цена:</strong> ${{ object.price }}</p>
+
+    {% if object.image %}
+    <img src="{{ object.image.url }}" alt="{{ object.name }}" class="product-image img-fluid">
+    {% endif %}
+
+    <a href="{% url 'homepage' %}" class="back-button">Назад в магазин</a>
+</div>
+{% endblock %}
