@@ -8,4 +8,5 @@ admin.site.register(Product)
 admin.site.register(BlogPost)
 
 # Регистрация модели Version
-admin.site.register(Version)  # Добавьте эту строку для регистрации модели Version
+# Добавьте эту строку для регистрации модели Version
+admin.site.register(Version)

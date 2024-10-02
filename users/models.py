@@ -1,7 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
 from django.core.exceptions import ValidationError
 import re  # Для регулярных выражений
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -14,13 +19,14 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
         return self.create_user(email, password, **extra_fields)
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
 
@@ -29,7 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []  # Поля, которые должны быть указаны при создании пользователя
 
     def __str__(self):
@@ -37,8 +43,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def clean(self):
         # Валидация номера телефона
-        if self.phone_number and not re.match(r'^\+?1?\d{9,15}$', self.phone_number):
-            raise ValidationError("Неверный формат номера телефона. Используйте формат: +1234567890 или 1234567890.")
+        if self.phone_number and not re.match(r"^\+?1?\d{9,15}$", self.phone_number):
+            raise ValidationError(
+                "Неверный формат номера телефона. Используйте формат: +1234567890 или 1234567890."
+            )
 
         # Валидация страны
         if self.country and len(self.country) < 2:

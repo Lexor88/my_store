@@ -6,27 +6,27 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0002_blogpost_alter_product_image_alter_product_name'),
+        ("products", "0002_blogpost_alter_product_image_alter_product_name"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='blogpost',
-            name='published',
+            model_name="blogpost",
+            name="published",
         ),
         migrations.AddField(
-            model_name='blogpost',
-            name='is_published',
+            model_name="blogpost",
+            name="is_published",
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='blogpost',
-            name='slug',
+            model_name="blogpost",
+            name="slug",
             field=models.SlugField(unique=True),
         ),
         migrations.AlterField(
-            model_name='blogpost',
-            name='title',
+            model_name="blogpost",
+            name="title",
             field=models.CharField(max_length=200),
         ),
     ]

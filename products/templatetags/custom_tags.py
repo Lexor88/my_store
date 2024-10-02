@@ -7,5 +7,5 @@ register = template.Library()
 @register.filter
 def media_path(value):
     if value:
-        return f'/media/{value}'
-    return '#'
+        return f"/media/{value}"
+    return "#"

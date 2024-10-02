@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
-from django.utils import timezone
 from users.models import User  # Импортируем модель пользователя
 
 
@@ -20,6 +19,7 @@ class Product(models.Model):
         return self.name
 
     def clean(self):
+        # Проверка цены перед сохранением
         if self.price < 0:
             raise ValidationError("Цена не может быть отрицательной.")
 
@@ -33,7 +33,7 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     slug = models.CharField(max_length=200, unique=True, blank=True)
     content = models.TextField()
-    preview_image = models.ImageField(upload_to='blog_previews/', null=True, blank=True)
+    preview_image = models.ImageField(upload_to="blog_previews/", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
@@ -51,7 +51,9 @@ class BlogPost(models.Model):
 
 
 class Version(models.Model):
-    product = models.ForeignKey(Product, related_name='versions', on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, related_name="versions", on_delete=models.CASCADE
+    )
     version_name = models.CharField(max_length=100)  # Название версии
     version_number = models.CharField(max_length=10)  # Номер версии
     is_current_version = models.BooleanField(default=False)  # Признак текущей версии

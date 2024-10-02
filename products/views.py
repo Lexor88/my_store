@@ -1,9 +1,14 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+    TemplateView,
+)
 from django.utils.text import slugify
-from django.core.mail import send_mail
 from smtplib import SMTPException
-from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -16,24 +21,24 @@ from products.utils import send_letter_about_reaching_certain_number_of_views
 
 # Контроллер для страницы контактов
 class ContactView(TemplateView):
-    template_name = 'products/contact.html'
+    template_name = "products/contact.html"
 
 
 # Отображение списка блогов
 class BlogPostListView(ListView):
     model = BlogPost
-    template_name = 'products/blog_list.html'
-    context_object_name = 'blog_posts'
+    template_name = "products/blog_list.html"
+    context_object_name = "blog_posts"
     paginate_by = 5
 
     def get_queryset(self):
-        return BlogPost.objects.filter(is_published=True).order_by('-created_at')
+        return BlogPost.objects.filter(is_published=True).order_by("-created_at")
 
 
 # Детальное отображение блога с увеличением счетчика просмотров
 class BlogPostDetailView(DetailView):
     model = BlogPost
-    template_name = 'products/blog_detail.html'
+    template_name = "products/blog_detail.html"
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
@@ -55,8 +60,8 @@ class BlogPostDetailView(DetailView):
 class BlogPostCreateView(CreateView):
     model = BlogPost
     form_class = BlogPostForm
-    template_name = 'products/blog_form.html'
-    success_url = reverse_lazy('blog_list')
+    template_name = "products/blog_form.html"
+    success_url = reverse_lazy("blog_list")
 
     def form_valid(self, form):
         blog_post = form.save(commit=False)
@@ -70,18 +75,18 @@ class BlogPostCreateView(CreateView):
 class BlogPostUpdateView(UpdateView):
     model = BlogPost
     form_class = BlogPostForm
-    template_name = 'products/blog_form.html'
+    template_name = "products/blog_form.html"
 
     def get_success_url(self):
         messages.success(self.request, "Блог успешно обновлен!")
-        return reverse_lazy('blog_detail', kwargs={'slug': self.object.slug})
+        return reverse_lazy("blog_detail", kwargs={"slug": self.object.slug})
 
 
 # Удаление блога
 class BlogPostDeleteView(DeleteView):
     model = BlogPost
-    template_name = 'products/blog_confirm_delete.html'
-    success_url = reverse_lazy('blog_list')
+    template_name = "products/blog_confirm_delete.html"
+    success_url = reverse_lazy("blog_list")
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, "Блог успешно удален!")
@@ -91,16 +96,16 @@ class BlogPostDeleteView(DeleteView):
 # Отображение главной страницы с товарами
 class ProductListView(ListView):
     model = Product
-    template_name = 'products/homepage.html'
-    context_object_name = 'products'
+    template_name = "products/homepage.html"
+    context_object_name = "products"
     paginate_by = 3  # Количество товаров на одной странице
 
     def get_queryset(self):
-        return Product.objects.all().order_by('name')
+        return Product.objects.all().order_by("name")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        for product in context['products']:
+        for product in context["products"]:
             product.active_version = product.versions.filter(is_current_version=True).first()
         return context
 
@@ -108,20 +113,20 @@ class ProductListView(ListView):
 # Детальное отображение продукта
 class ProductDetailView(DetailView):
     model = Product
-    template_name = 'products/product_detail.html'
-    context_object_name = 'product'
+    template_name = "products/product_detail.html"
+    context_object_name = "product"
 
 
 # Создание нового продукта
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
-    template_name = 'products/add_product.html'
-    success_url = reverse_lazy('homepage')
+    template_name = "products/add_product.html"
+    success_url = reverse_lazy("homepage")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
+        kwargs["user"] = self.request.user
         return kwargs
 
     def form_valid(self, form):
@@ -131,8 +136,8 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.warning(request, 'Для создания продукта войдите в учетную запись.')
-            return redirect('login')
+            messages.warning(request, "Для создания продукта войдите в учетную запись.")
+            return redirect("login")
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -140,36 +145,36 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
-    template_name = 'products/add_product.html'
+    template_name = "products/add_product.html"
 
     def get_success_url(self):
         messages.success(self.request, "Продукт успешно обновлен!")
-        return reverse_lazy('product_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy("product_detail", kwargs={"pk": self.object.pk})
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
+        kwargs["user"] = self.request.user
         return kwargs
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
         if obj.owner != self.request.user:
             messages.error(request, "Вы не можете редактировать этот продукт.")
-            return redirect('homepage')
+            return redirect("homepage")
         return super().dispatch(request, *args, **kwargs)
 
 
 # Удаление продукта
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
-    template_name = 'products/product_confirm_delete.html'
-    success_url = reverse_lazy('homepage')
+    template_name = "products/product_confirm_delete.html"
+    success_url = reverse_lazy("homepage")
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
         if obj.owner != self.request.user:
             messages.error(request, "Вы не можете удалить этот продукт.")
-            return redirect('homepage')
+            return redirect("homepage")
         return super().dispatch(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
@@ -181,11 +186,11 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
 class VersionCreateView(CreateView):
     model = Version
     form_class = VersionForm
-    template_name = 'products/version_form.html'
-    success_url = reverse_lazy('homepage')
+    template_name = "products/version_form.html"
+    success_url = reverse_lazy("homepage")
 
     def form_valid(self, form):
-        product = form.cleaned_data['product']
+        product = form.cleaned_data["product"]
         Version.objects.filter(product=product, is_current_version=True).update(is_current_version=False)
         messages.success(self.request, "Новая версия продукта успешно создана!")
         return super().form_valid(form)
@@ -195,25 +200,25 @@ class VersionCreateView(CreateView):
 class VersionUpdateView(UpdateView):
     model = Version
     form_class = VersionForm
-    template_name = 'products/version_form.html'
+    template_name = "products/version_form.html"
 
     def form_valid(self, form):
-        product = form.cleaned_data['product']
-        is_current = form.cleaned_data.get('is_current_version', False)
+        product = form.cleaned_data["product"]
+        is_current = form.cleaned_data.get("is_current_version", False)
         if is_current:
             Version.objects.filter(product=product, is_current_version=True).update(is_current_version=False)
         messages.success(self.request, "Версия продукта успешно обновлена!")
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('homepage')
+        return reverse_lazy("homepage")
 
 
 # Удаление версии продукта
 class VersionDeleteView(DeleteView):
     model = Version
-    template_name = 'products/version_confirm_delete.html'
-    success_url = reverse_lazy('homepage')
+    template_name = "products/version_confirm_delete.html"
+    success_url = reverse_lazy("homepage")
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Версия продукта успешно удалена!")
@@ -223,12 +228,15 @@ class VersionDeleteView(DeleteView):
 # Класс для установки активной версии
 class SetActiveVersionView(View):
     def post(self, request, *args, **kwargs):
-        version_id = request.POST.get('active_version')
+        version_id = request.POST.get("active_version")
         version = get_object_or_404(Version, pk=version_id)
+
         # Сбросить текущую версию для всех остальных версий продукта
         Version.objects.filter(product=version.product, is_current_version=True).update(is_current_version=False)
+
         # Установить новую текущую версию
         version.is_current_version = True
         version.save()
+
         messages.success(request, "Активная версия успешно установлена!")
-        return redirect('homepage')
+        return redirect("homepage")

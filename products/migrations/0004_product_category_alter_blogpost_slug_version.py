@@ -7,28 +7,43 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0003_remove_blogpost_published_blogpost_is_published_and_more'),
+        ("products", "0003_remove_blogpost_published_blogpost_is_published_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='category',
-            field=models.CharField(default='Uncategorized', max_length=100),
+            model_name="product",
+            name="category",
+            field=models.CharField(default="Uncategorized", max_length=100),
         ),
         migrations.AlterField(
-            model_name='blogpost',
-            name='slug',
+            model_name="blogpost",
+            name="slug",
             field=models.CharField(blank=True, max_length=200, unique=True),
         ),
         migrations.CreateModel(
-            name='Version',
+            name="Version",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('version_number', models.CharField(max_length=50)),
-                ('version_name', models.CharField(max_length=100)),
-                ('is_current_version', models.BooleanField(default=False)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='versions', to='products.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("version_number", models.CharField(max_length=50)),
+                ("version_name", models.CharField(max_length=100)),
+                ("is_current_version", models.BooleanField(default=False)),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="versions",
+                        to="products.product",
+                    ),
+                ),
             ],
         ),
     ]

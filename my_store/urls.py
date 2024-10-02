@@ -4,9 +4,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Подключение админки
-    path('', include('products.urls')),  # Подключаем маршруты из приложения products
-    path('users/', include('users.urls')),  # Подключаем маршруты из приложения users
+    path("admin/", admin.site.urls),  # Подключение админки
+    # Подключаем маршруты из приложения products
+    path("", include("products.urls")),
+    # Подключаем маршруты из приложения users
+    path("users/", include("users.urls")),
 ]
 
 # Добавляем поддержку медиафайлов в режиме разработки
