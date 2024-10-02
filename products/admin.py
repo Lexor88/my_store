@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, BlogPost, Version  # Не забудьте импортировать модель Version
+from .models import Product, BlogPost, Version
 
 # Регистрация модели Product
 admin.site.register(Product)

@@ -1,29 +1,20 @@
 from django.urls import path
-from .views.product_views import (
-    ProductListView,
-    ProductDetailView,
-    ProductCreateView,
-    ProductUpdateView,
-    ProductDeleteView
+from .views import (
+    ProductListView, ProductDetailView, ProductCreateView, ProductUpdateView, ProductDeleteView,
+    BlogPostListView, BlogPostDetailView, BlogPostCreateView, BlogPostUpdateView, BlogPostDeleteView,
+    ContactView,
+    VersionCreateView, VersionUpdateView, VersionDeleteView, SetActiveVersionView
 )
-from .views.blog_views import (
-    BlogPostListView,
-    BlogPostDetailView,
-    BlogPostCreateView,
-    BlogPostUpdateView,
-    BlogPostDeleteView
-)
-from .views.contact_views import ContactView
-from .views.version_views import VersionCreateView, VersionUpdateView, VersionDeleteView
-from .views.version_views import SetActiveVersionView  # Импортируем новое представление
 
 urlpatterns = [
-    # Маршруты для товаров
+    # Главная страница (без префикса 'products/')
     path('', ProductListView.as_view(), name='homepage'),
-    path('product/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),
-    path('add_product/', ProductCreateView.as_view(), name='add_product'),
-    path('product/<int:pk>/edit/', ProductUpdateView.as_view(), name='edit_product'),  # Редактирование товара
-    path('product/<int:pk>/delete/', ProductDeleteView.as_view(), name='delete_product'),  # Удаление товара
+
+    # Маршруты для товаров
+    path('products/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),
+    path('products/add/', ProductCreateView.as_view(), name='add_product'),
+    path('products/<int:pk>/edit/', ProductUpdateView.as_view(), name='edit_product'),  # Редактирование товара
+    path('products/<int:pk>/delete/', ProductDeleteView.as_view(), name='delete_product'),  # Удаление товара
 
     # Маршруты для блога
     path('blog/', BlogPostListView.as_view(), name='blog_list'),

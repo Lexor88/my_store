@@ -1,4 +1,3 @@
-<!-- products/add_product.html -->
 {% extends 'products/base.html' %}
 
 {% block content %}
@@ -6,6 +5,8 @@
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
+    <!-- Скрытое поле для указания владельца -->
+    <input type="hidden" name="owner" value="{{ user.id }}">
     <button type="submit">Сохранить</button>
 </form>
 {% endblock %}

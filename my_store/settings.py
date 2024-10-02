@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'products',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -138,6 +139,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Настройки почтового сервера
+# Настройки почтового сервера
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = env('EMAIL_HOST', default='smtp.yandex.com')
 EMAIL_PORT = env('EMAIL_PORT', default=587)
@@ -149,3 +151,8 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
 # Отладка: печать значений переменных окружения
 print("EMAIL_HOST_USER:", EMAIL_HOST_USER)
 print("EMAIL_HOST_PASSWORD:", EMAIL_HOST_PASSWORD)
+
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = 'homepage'  # Это URL, куда перенаправлять пользователей после входа
+LOGOUT_REDIRECT_URL = 'homepage'  # Это URL, куда перенаправлять пользователей после выхода
+

@@ -1,106 +1,112 @@
 /* Общие стили для страницы */
 body {
-    background: linear-gradient(135deg, #0e0e0e, #1c1c1c); /* Градиентный фон */
-    color: #ffffff; /* Цвет текста */
-    font-family: 'Roboto', sans-serif; /* Шрифт Roboto */
+    background: linear-gradient(135deg, #0e0e0e, #1c1c1c);
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
 }
 
 /* Стили контейнера */
 .container {
-    background: rgba(50, 50, 50, 0.9); /* Полупрозрачный фон для контейнера */
-    padding: 30px; /* Внутренние отступы */
-    border-radius: 10px; /* Закругленные углы */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Тень */
-    margin-top: 20px; /* Отступ сверху */
+    background: rgba(50, 50, 50, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
 }
 
 /* Стили заголовков */
 h1, h2, h5 {
-    color: #f0f0f0; /* Цвет заголовков */
-    text-transform: uppercase; /* Заглавные буквы */
-    font-weight: bold; /* Жирный шрифт */
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Тень для заголовков */
+    color: #f0f0f0;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 /* Стили карточек */
 .card {
-    background: rgba(30, 30, 30, 0.95); /* Полупрозрачный фон для карточек */
-    border: none; /* Без рамки */
-    border-radius: 15px; /* Закругленные края */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* Тень */
-    transition: transform 0.3s, box-shadow 0.3s; /* Плавный переход */
-    overflow: hidden; /* Скрываем выходящие за пределы элементы */
+    background: rgba(30, 30, 30, 0.95);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.card img {
+    width: 100%;
+    height: 300px; /* Устанавливаем фиксированную высоту */
+    object-fit: cover; /* Обрезаем изображение, сохраняя его пропорции */
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    transition: transform 0.3s;
 }
 
 .card:hover {
-    transform: translateY(-5px); /* Эффект при наведении */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6); /* Увеличиваем тень при наведении */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+.card:hover img {
+    transform: scale(1.05);
 }
 
 /* Стили кнопок */
 .btn {
-    background-color: #0072ff; /* Цвет кнопок */
-    color: white; /* Цвет текста на кнопках */
-    border-radius: 30px; /* Закругленные углы */
-    padding: 12px 24px; /* Внутренние отступы */
-    border: none; /* Без рамки */
-    transition: background-color 0.3s, transform 0.3s; /* Плавные переходы */
-    cursor: pointer; /* Курсор при наведении */
+    background-color: #0072ff;
+    color: white;
+    border-radius: 30px;
+    padding: 12px 24px;
+    border: none;
+    transition: background-color 0.3s, transform 0.3s;
+    cursor: pointer;
 }
 
 .btn:hover {
-    background-color: #005bb5; /* Темный цвет при наведении */
-    transform: translateY(-2px); /* Эффект нажатия */
+    background-color: #005bb5;
+    transform: translateY(-2px);
 }
 
 .btn:active {
-    transform: translateY(1px); /* Эффект нажатия */
+    transform: translateY(1px);
 }
 
 /* Стили форм */
 .form-control {
-    border-radius: 8px; /* Закругленные углы для полей ввода */
-    padding: 10px; /* Внутренние отступы */
-    border: 1px solid #ccc; /* Рамка */
-    transition: border-color 0.3s; /* Плавный переход цвета рамки */
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s;
 }
 
 .form-control:focus {
-    border-color: #0072ff; /* Цвет рамки при фокусе */
-    box-shadow: 0 0 5px rgba(0, 114, 255, 0.5); /* Тень при фокусе */
+    border-color: #0072ff;
+    box-shadow: 0 0 5px rgba(0, 114, 255, 0.5);
 }
 
 /* Пагинация */
 .pagination .current {
-    color: #0072ff; /* Цвет для текущей страницы в пагинации */
-}
-
-/* Анимация загрузки страницы */
-.loader {
-    position: fixed; /* Фиксированное положение */
-    top: 50%; /* Центрирование по вертикали */
-    left: 50%; /* Центрирование по горизонтали */
-    transform: translate(-50%, -50%); /* Центрируем по середине */
-    z-index: 1000; /* Поверх остальных элементов */
+    color: #0072ff;
 }
 
 /* Переходы для всех элементов */
 * {
-    transition: all 0.3s ease; /* Плавный переход для всех элементов */
-}
-
-/* Стили для кнопок с конфигурацией */
-.btn-success {
-    background-color: #28a745; /* Зеленый цвет для кнопок выбора версий */
-}
-
-.btn-success:hover {
-    background-color: #218838; /* Темно-зеленый цвет при наведении */
+    transition: all 0.3s ease;
 }
 
 /* Стили для страницы деталей продукта */
 .product-detail {
-    background: rgba(50, 50, 50, 0.8); /* Полупрозрачный фон */
+    background: rgba(50, 50, 50, 0.8);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -108,47 +114,32 @@ h1, h2, h5 {
 }
 
 .product-image {
-    max-width: 100%; /* Устанавливаем максимальную ширину */
-    height: auto; /* Высота авто для адаптации */
-}
-
-.back-button {
-    margin-top: 20px;
-    background-color: #0072ff; /* Цвет кнопки */
-    color: white; /* Цвет текста */
-    padding: 10px 20px; /* Отступы */
-    border-radius: 5px; /* Закругленные углы */
-    text-decoration: none; /* Убираем подчеркивание */
-}
-
-.back-button:hover {
-    background-color: #005bb5; /* Цвет при наведении */
-}
-
-/* Стили для страницы деталей продукта */
-.product-detail {
-    background: rgba(50, 50, 50, 0.8); /* Полупрозрачный фон */
-    padding: 20px;
+    max-width: 100%;
+    height: auto;
     border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    margin-top: 20px;
-}
-
-.product-image {
-    max-width: 100%; /* Устанавливаем максимальную ширину */
-    height: auto; /* Высота авто для адаптации */
-    border-radius: 10px; /* Закругленные углы для изображения */
 }
 
 .back-button {
     margin-top: 20px;
-    background-color: #0072ff; /* Цвет кнопки */
-    color: white; /* Цвет текста */
-    padding: 10px 20px; /* Отступы */
-    border-radius: 5px; /* Закругленные углы */
-    text-decoration: none; /* Убираем подчеркивание */
+    background-color: #0072ff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
 }
 
 .back-button:hover {
-    background-color: #005bb5; /* Цвет при наведении */
+    background-color: #005bb5;
+}
+
+/* Дополнительные стили для формы выбора версии продукта */
+.card-footer {
+    padding: 15px;
+    background: rgba(20, 20, 20, 0.8);
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.form-check-label {
+    color: #f0f0f0;
 }
