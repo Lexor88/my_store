@@ -1,6 +1,7 @@
-<!-- products/templates/products/blog_form.html -->
 {% extends 'products/base.html' %}
-{% block title %}Создать новую статью{% endblock %}
+{% load custom_filters %}  <!-- Загружаем ваши пользовательские фильтры -->
+
+{% block title %}{{ view.title }}{% endblock %}
 
 {% block content %}
 <h1>{{ view.title }}</h1>
@@ -10,35 +11,36 @@
     <!-- Если есть ошибки, выводим их здесь -->
     {% if form.errors %}
     <div class="alert alert-danger">
+        <strong>Пожалуйста, исправьте следующие ошибки:</strong>
         <ul>
             {% for field in form %}
-            {% for error in field.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
             {% endfor %}
             {% for error in form.non_field_errors %}
-            <li>{{ error }}</li>
+                <li>{{ error }}</li>
             {% endfor %}
         </ul>
     </div>
     {% endif %}
 
-    <!-- Отображение полей формы -->
+    <!-- Отображение полей формы с классами Bootstrap -->
     <div class="mb-3">
         {{ form.title.label_tag }} <!-- Метка для заголовка -->
-        {{ form.title }}
+        {{ form.title|add_class:"form-control" }} <!-- Применяем класс Bootstrap -->
     </div>
     <div class="mb-3">
         {{ form.content.label_tag }} <!-- Метка для содержания -->
-        {{ form.content }}
+        {{ form.content|add_class:"form-control" }} <!-- Применяем класс Bootstrap -->
     </div>
     <div class="mb-3">
         {{ form.preview_image.label_tag }} <!-- Метка для изображения -->
-        {{ form.preview_image }}
+        {{ form.preview_image|add_class:"form-control" }} <!-- Применяем класс Bootstrap -->
     </div>
-    <div class="mb-3">
-        {{ form.published.label_tag }} <!-- Метка для публикации -->
-        {{ form.published }}
+    <div class="mb-3 form-check">
+        {{ form.is_published|add_class:"form-check-input" }} <!-- Чекбокс для публикации -->
+        {{ form.is_published.label_tag }} <!-- Метка для публикации -->
     </div>
 
     <button type="submit" class="btn btn-primary">Сохранить</button>

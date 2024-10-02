@@ -10,7 +10,19 @@
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+
+    {{ form.non_field_errors }}  <!-- Отображение ошибок, которые не привязаны к конкретному полю -->
+
+    {% for field in form %}
+        <div class="form-group">
+            {{ field.label_tag }}  <!-- Метка для поля -->
+            {{ field }}  <!-- Поле формы -->
+            {{ field.errors }}  <!-- Отображение ошибок для конкретного поля -->
+        </div>
+    {% endfor %}
+
     <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
 </form>
+
+<a href="{% url 'login' %}" class="btn btn-secondary mt-3">Уже есть аккаунт? Войти</a>
 {% endblock %}

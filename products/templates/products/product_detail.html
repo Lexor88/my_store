@@ -1,17 +1,56 @@
 {% extends 'products/base.html' %}
+{% load static %}
 
 {% block title %}{{ object.name }} - Подробности{% endblock %}
 
 {% block content %}
 <div class="container product-detail">
-    <h1 class="display-4">{{ object.name }}</h1>
-    <p class="lead">{{ object.description }}</p>
-    <p class="price"><strong>Цена:</strong> ${{ object.price }}</p>
+    {% if not request.user.is_authenticated %}
+        <p class="text-danger">Чтобы просматривать товары, пожалуйста, <a href="{% url 'login' %}">авторизуйтесь</a>.</p>
+        <a href="{% url 'homepage' %}" class="btn btn-secondary mt-3">Назад в магазин</a>
+    {% elif object.is_published or perms.products.can_publish_product or request.user == object.owner %}
+        <h1 class="display-4">{{ object.name }}</h1>
+        <p class="lead">{{ object.description }}</p>
+        <p class="price"><strong>Цена:</strong> ${{ object.price }}</p>
 
-    {% if object.image %}
-    <img src="{{ object.image.url }}" alt="{{ object.name }}" class="product-image img-fluid">
+        {% if object.image %}
+            <img src="{{ object.image.url }}" alt="{{ object.name }}" class="product-image img-fluid">
+        {% else %}
+            <img src="{% static 'default-image.jpg' %}" alt="Изображение недоступно" class="product-image img-fluid">
+        {% endif %}
+
+        {% if object.active_version %}
+            <p><strong>Текущая версия:</strong> {{ object.active_version.version_name }} (v{{ object.active_version.version_number }})</p>
+        {% endif %}
+
+        <p><strong>Дата создания:</strong> {{ object.created_at|date:"d.m.Y" }}</p>
+
+        <!-- Проверка прав доступа к редактированию и удалению -->
+        {% if perms.products.can_change_category or request.user == object.owner %}
+            <div class="mt-3">
+                <a href="{% url 'edit_product' object.slug %}" class="btn btn-primary">Редактировать</a>
+                <a href="{% url 'delete_product' object.slug %}" class="btn btn-danger">Удалить</a>
+            </div>
+        {% endif %}
+
+        <!-- Проверка прав доступа к публикации -->
+        {% if perms.products.can_publish_product %}
+            <form method="post" action="{% url 'publish_product' object.pk %}" class="mt-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">
+                    {% if object.is_published %}
+                        Снять с публикации
+                    {% else %}
+                        Опубликовать
+                    {% endif %}
+                </button>
+            </form>
+        {% endif %}
+
+        <a href="{% url 'homepage' %}" class="btn btn-secondary mt-3">Назад в магазин</a>
+    {% else %}
+        <p class="text-danger">Этот продукт не опубликован.</p>
+        <a href="{% url 'homepage' %}" class="btn btn-secondary mt-3">Назад в магазин</a>
     {% endif %}
-
-    <a href="{% url 'homepage' %}" class="back-button">Назад в магазин</a>
 </div>
 {% endblock %}

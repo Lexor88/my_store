@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
-
+from django.contrib.auth.models import Group
+from .models import User  # Импортируем вашу кастомную модель пользователя
 
 class UserRegistrationForm(UserCreationForm):
     # Делает поле аватара необязательным
@@ -33,4 +33,25 @@ class UserRegistrationForm(UserCreationForm):
             user.avatar = self.cleaned_data["avatar"]
         if commit:
             user.save()
+        return user
+
+
+class CustomUserChangeForm(forms.ModelForm):
+    groups = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        label='Группы'
+    )
+
+    class Meta:
+        model = User
+        fields = ['email', 'groups']  # Укажите только те поля, которые есть в вашей модели User
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+            # Устанавливаем группы
+            user.groups.set(self.cleaned_data['groups'])
         return user

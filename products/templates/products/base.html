@@ -12,16 +12,21 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">  <!-- Подключаем CSS файл -->
 </head>
 <body>
-<!-- Включаем меню -->
-{% include 'products/menu.html' %}
+    <!-- Включаем меню -->
+    {% include 'products/menu.html' %}
 
-<div class="container">
-    <!-- Блок для сообщений -->
-    {% include 'products/messages.html' %}
+    <div class="container">
+        <!-- Блок для сообщений -->
+        {% include 'products/messages.html' %}
 
-    <!-- Блок для контента -->
-    {% block content %}
-    {% endblock %}
-</div>
+        <!-- Блок для контента -->
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Подключаем скрипты Bootstrap и jQuery, если они требуются -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

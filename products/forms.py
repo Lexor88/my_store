@@ -5,7 +5,7 @@ from .models import Product, BlogPost, Version
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ["name", "description", "price", "image"]  # Поле 'owner' убрано
+        fields = ["name", "description", "price", "image"]
 
     # Список запрещенных слов
     forbidden_words = [
@@ -21,12 +21,14 @@ class ProductForm(forms.ModelForm):
     ]
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop("user", None)  # Получаем пользователя из kwargs
+        self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "form-control"})  # Добавляем класс для всех полей
 
     def save(self, commit=True):
         product = super().save(commit=False)
-        product.owner = self.user  # Назначаем владельца
+        product.owner = self.user
         if commit:
             product.save()
         return product
@@ -42,12 +44,17 @@ class ProductForm(forms.ModelForm):
         return description
 
     def validate_forbidden_words(self, text, field_name):
-        """Проверка на наличие запрещенных слов."""
         for word in self.forbidden_words:
             if word in text.lower():
                 raise forms.ValidationError(
                     f"{field_name.capitalize()} содержит запрещенное слово: {word}"
                 )
+
+    def clean_slug(self):
+        slug = slugify(self.cleaned_data["name"])
+        if Product.objects.filter(slug=slug).exists():
+            raise forms.ValidationError("Слаг должен быть уникальным.")
+        return slug
 
 
 class BlogPostForm(forms.ModelForm):
@@ -55,12 +62,15 @@ class BlogPostForm(forms.ModelForm):
         model = BlogPost
         fields = ["title", "content", "preview_image", "is_published"]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "form-control"})  # Добавляем класс для всех полей
+
     def clean_title(self):
         title = self.cleaned_data.get("title")
         if len(title) < 5:
-            raise forms.ValidationError(
-                "Заголовок должен содержать минимум 5 символов."
-            )
+            raise forms.ValidationError("Заголовок должен содержать минимум 5 символов.")
         return title
 
     def clean_content(self):
@@ -78,11 +88,10 @@ class VersionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            # Применение класса для всех полей
             field.widget.attrs.update({"class": "form-control"})
         self.fields["is_current_version"].widget.attrs.update(
             {"class": "form-check-input"}
-        )  # Для чекбокса
+        )
 
     def clean_version_number(self):
         version_number = self.cleaned_data.get("version_number")
@@ -95,8 +104,6 @@ class VersionForm(forms.ModelForm):
         is_current = cleaned_data.get("is_current_version")
         product = cleaned_data.get("product")
 
-        # Проверяем, если версия помечена как текущая, убедиться, что у
-        # продукта нет другой текущей версии
         if (
             is_current
             and Version.objects.filter(product=product, is_current_version=True)

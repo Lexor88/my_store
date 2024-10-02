@@ -4,6 +4,17 @@
 
 {% block content %}
 <h2>{% if object %}Редактировать{% else %}Создать{% endif %} версию</h2>
+
+{% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for field, errors in form.errors.items %}
+                <li>{{ field }}: {{ errors|join:", " }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}  <!-- Отображаем все поля формы -->
@@ -11,5 +22,6 @@
     <!-- Добавляем кнопку для отправки формы -->
     <button type="submit" class="btn btn-primary">Сохранить</button>
 </form>
+
 <a href="{% url 'homepage' %}" class="btn btn-secondary">Назад</a>
 {% endblock %}

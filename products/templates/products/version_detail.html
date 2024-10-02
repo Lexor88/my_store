@@ -1,4 +1,3 @@
-<!-- products/version_detail.html -->
 {% extends 'products/base.html' %}
 
 {% block title %}Версии продукта: {{ object.product.name }}{% endblock %}
@@ -6,19 +5,29 @@
 {% block content %}
 <h2>Версии для {{ object.product.name }}</h2>
 
+<!-- Уведомление об успешном сохранении активной версии (если требуется) -->
+{% if messages %}
+    <div class="alert alert-success">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <form method="post">
     {% csrf_token %}
     {% for version in versions %}
-    <div>
-        <input type="radio" name="active_version" value="{{ version.pk }}"
-               {% if version.is_current_version %}checked{% endif %}>
-        <label>{{ version.version_name }} (v{{ version.version_number }})</label>
-    </div>
+        <div>
+            <input type="radio" name="active_version" value="{{ version.pk }}"
+                   {% if version.is_current_version %}checked{% endif %}>
+            <label>{{ version.version_name }} (v{{ version.version_number }})</label>
+        </div>
     {% empty %}
-    <p>Нет доступных версий.</p>
+        <p>Нет доступных версий.</p>
     {% endfor %}
     <button type="submit" class="btn btn-primary">Сохранить активную версию</button>
 </form>
 
 <a href="{% url 'add_version' %}" class="btn btn-secondary">Добавить новую версию</a>
+<a href="{% url 'homepage' %}" class="btn btn-secondary">Назад в магазин</a>
 {% endblock %}

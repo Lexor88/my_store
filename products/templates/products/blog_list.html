@@ -1,52 +1,83 @@
-<!-- products/templates/products/blog_list.html -->
 {% extends 'products/base.html' %}
+{% load static %}
+
 {% block title %}Блог{% endblock %}
 
 {% block content %}
-<h1>Блог</h1>
-<a href="{% url 'blog_create' %}">Добавить новую статью</a>
-<ul>
-    {% for blog_post in blog_posts %}
-    <li>
-        <h2><a href="{% url 'blog_detail' blog_post.slug %}">{{ blog_post.title }}</a></h2>
+<div class="container">
+    <h1 class="text-light text-center mb-4">Блог</h1>
+    <a href="{% url 'blog_create' %}" class="btn btn-primary mb-3">Добавить новую статью</a>
 
-        <!-- Проверяем наличие превью-изображения и выводим его -->
-        {% if blog_post.preview_image %}
-        <img src="{{ blog_post.preview_image.url }}" alt="{{ blog_post.title }}"
-             style="max-width: 300px; height: auto;">
-        {% endif %}
+    <!-- Форма фильтров и сортировки -->
+    <form method="GET" class="mb-4">
+        <div class="form-group">
+            <label for="category">Категория</label>
+            <select name="category" id="category" class="form-control">
+                <option value="">Все категории</option>
+                <option value="категория1">Категория 1</option>
+                <option value="категория2">Категория 2</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="sort">Сортировать по</label>
+            <select name="sort" id="sort" class="form-control">
+                <option value="">По умолчанию</option>
+                <option value="newest">Новизне</option>
+                <option value="most_viewed">По просмотрам</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Применить</button>
+    </form>
 
-        <p>{{ blog_post.content|slice:":200" }}...</p>
-
-        <p>Дата публикации: {{ blog_post.created_at }}</p>
-        <p>Просмотры: {{ blog_post.views }}</p>
-
-        {% if blog_post.slug %}
-        <a href="{% url 'blog_update' blog_post.slug %}">Редактировать</a> |
-        <a href="{% url 'blog_delete' blog_post.slug %}">Удалить</a>
-        {% endif %}
-    </li>
-    {% empty %}
-    <p>Записи в блоге отсутствуют.</p>
-    {% endfor %}
-</ul>
+    <div class="row">
+        {% for blog_post in blog_posts %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card bg-dark text-light h-100"> <!-- Заменяем на h-100 для равного размера карточек -->
+                {% if blog_post.preview_image %}
+                    <img src="{{ blog_post.preview_image.url }}" alt="{{ blog_post.title }}"
+                         class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'default-image.jpg' %}" alt="Изображение недоступно"
+                         class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5>
+                        <a href="{% url 'blog_detail' blog_post.slug %}" class="text-info">{{ blog_post.title }}</a>
+                    </h5>
+                    <p>{{ blog_post.content|slice:":200" }}...</p>
+                    <p>Дата публикации: {{ blog_post.created_at|date:"d.m.Y" }}</p>
+                    <p>Просмотры: {{ blog_post.views }}</p>
+                    <div>
+                        {% if perms.products.can_manage_blog or request.user == blog_post.owner %}
+                            <a href="{% url 'blog_update' blog_post.slug %}" class="btn btn-warning btn-sm">Редактировать</a>
+                            <a href="{% url 'blog_delete' blog_post.slug %}" class="btn btn-danger btn-sm">Удалить</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Записи в блоге отсутствуют.</p>
+        {% endfor %}
+    </div>
+</div>
 
 <!-- Пагинация -->
-<div class="pagination">
-        <span class="step-links">
-            {% if blog_posts.has_previous %}
-                <a href="?page=1">Первая</a>
-                <a href="?page={{ blog_posts.previous_page_number }}">Назад</a>
-            {% endif %}
+<div class="pagination mt-4 text-center">
+    <span class="step-links">
+        {% if blog_posts.has_previous %}
+            <a href="?page=1" class="btn btn-secondary">Первая</a>
+            <a href="?page={{ blog_posts.previous_page_number }}" class="btn btn-secondary">Назад</a>
+        {% endif %}
 
-            <span class="current">
-                Страница {{ blog_posts.number }} из {{ blog_posts.paginator.num_pages }}
-            </span>
-
-            {% if blog_posts.has_next %}
-                <a href="?page={{ blog_posts.next_page_number }}">Вперед</a>
-                <a href="?page={{ blog_posts.paginator.num_pages }}">Последняя</a>
-            {% endif %}
+        <span class="current">
+            Страница {{ blog_posts.number }} из {{ blog_posts.paginator.num_pages }}
         </span>
+
+        {% if blog_posts.has_next %}
+            <a href="?page={{ blog_posts.next_page_number }}" class="btn btn-secondary">Вперед</a>
+            <a href="?page={{ blog_posts.paginator.num_pages }}" class="btn btn-secondary">Последняя</a>
+        {% endif %}
+    </span>
 </div>
 {% endblock %}

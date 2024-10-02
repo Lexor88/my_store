@@ -5,9 +5,10 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-/* Стили контейнера */
+/* Стили контейнера с фоновым изображением */
 .container {
-    background: rgba(50, 50, 50, 0.9);
+    background: rgba(50, 50, 50, 0.9) url("{% static 'images/background.jpg.jpg' %}") no-repeat center center;
+    background-size: cover; /* Позволяет изображению покрывать весь контейнер */
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -32,20 +33,19 @@ h1, h2, h5 {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100%; /* Изменено на 100% для лучшего выравнивания */
 }
 
 .card-body {
-    padding: 20px;
+    padding: 20px; /* Увеличенные отступы для тела карточки */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex-grow: 1;
 }
 
 .card img {
     width: 100%;
-    height: 300px; /* Устанавливаем фиксированную высоту */
+    height: 300px; /* Увеличенная высота для изображения */
     object-fit: cover; /* Обрезаем изображение, сохраняя его пропорции */
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
@@ -119,6 +119,7 @@ h1, h2, h5 {
     border-radius: 10px;
 }
 
+/* Кнопка "Назад" */
 .back-button {
     margin-top: 20px;
     background-color: #0072ff;
@@ -142,4 +143,48 @@ h1, h2, h5 {
 
 .form-check-label {
     color: #f0f0f0;
+}
+
+/* Адаптивные стили для экранов меньшей ширины */
+@media (max-width: 768px) {
+    .card img {
+        height: 200px; /* Изменяем высоту изображения для мобильных устройств */
+    }
+
+    .container {
+        padding: 20px; /* Уменьшаем отступы на мобильных устройствах */
+    }
+
+    .card {
+        height: auto; /* Позволяет карточкам быть более гибкими на мобильных устройствах */
+    }
+}
+
+.blog-detail {
+    background: rgba(50, 50, 50, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+}
+
+/* Стили для изображений в блоге */
+.blog-detail img {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Стили для кнопок социальных сетей */
+.social-share a {
+    margin-right: 10px; /* Отступ между кнопками */
+}
+
+.card {
+    border: none; /* Убираем рамку */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
 }

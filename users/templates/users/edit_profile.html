@@ -25,7 +25,7 @@
 
     <form method="post" enctype="multipart/form-data" action="{% url 'edit_profile' %}">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.as_p }}  <!-- Отображаем все поля формы -->
         <button type="submit" class="btn btn-success">Сохранить изменения</button>
     </form>
 
