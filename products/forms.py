@@ -24,7 +24,9 @@ class ProductForm(forms.ModelForm):
         self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs.update({"class": "form-control"})  # Добавляем класс для всех полей
+            field.widget.attrs.update(
+                {"class": "form-control"}
+            )  # Добавляем класс для всех полей
 
     def save(self, commit=True):
         product = super().save(commit=False)
@@ -65,25 +67,36 @@ class BlogPostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs.update({"class": "form-control"})  # Добавляем класс для всех полей
+            field.widget.attrs.update(
+                {"class": "form-control"}
+            )  # Добавляем класс для всех полей
 
     def clean_title(self):
         title = self.cleaned_data.get("title")
         if len(title) < 5:
-            raise forms.ValidationError("Заголовок должен содержать минимум 5 символов.")
+            raise forms.ValidationError(
+                "Заголовок должен содержать минимум 5 символов."
+            )
         return title
 
     def clean_content(self):
         content = self.cleaned_data.get("content")
         if len(content) < 20:
-            raise forms.ValidationError("Контент должен содержать минимум 20 символов.")
+            raise forms.ValidationError(
+                "Контент должен содержать минимум 20 символов."
+            )
         return content
 
 
 class VersionForm(forms.ModelForm):
     class Meta:
         model = Version
-        fields = ["product", "version_number", "version_name", "is_current_version"]
+        fields = [
+            "product",
+            "version_number",
+            "version_name",
+            "is_current_version",
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -106,9 +119,13 @@ class VersionForm(forms.ModelForm):
 
         if (
             is_current
-            and Version.objects.filter(product=product, is_current_version=True)
+            and Version.objects.filter(
+                product=product, is_current_version=True
+            )
             .exclude(pk=self.instance.pk)
             .exists()
         ):
-            raise forms.ValidationError("У этого продукта уже есть текущая версия.")
+            raise forms.ValidationError(
+                "У этого продукта уже есть текущая версия."
+            )
         return cleaned_data

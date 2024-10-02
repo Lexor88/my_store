@@ -1,5 +1,5 @@
 {% extends 'products/base.html' %}
-{% load static %}
+{% load user_filters %}  <!-- Загрузка пользовательских фильтров -->
 
 {% block title %}Редактирование профиля{% endblock %}
 
@@ -8,29 +8,37 @@
     <h2>Редактирование профиля</h2>
 
     {% if form.errors %}
-        <div class="alert alert-danger">
-            <strong>Пожалуйста, исправьте следующие ошибки:</strong>
-            <ul>
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-                {% for error in form.non_field_errors %}
+    <div class="alert alert-danger">
+        <strong>Пожалуйста, исправьте следующие ошибки:</strong>
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
                     <li>{{ error }}</li>
                 {% endfor %}
-            </ul>
-        </div>
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
     {% endif %}
 
-    <form method="post" enctype="multipart/form-data" action="{% url 'edit_profile' %}">
+    <form method="post" enctype="multipart/form-data" action="{% url 'users:edit_profile' %}">
         {% csrf_token %}
-        {{ form.as_p }}  <!-- Отображаем все поля формы -->
+        {% for field in form %}
+        <div class="form-group">
+            {{ field.label_tag }}
+            {{ field|add_class:"form-control" }}
+            {% for error in field.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        {% endfor %}
         <button type="submit" class="btn btn-success">Сохранить изменения</button>
     </form>
 
     <p class="mt-3">
-        <a href="{% url 'homepage' %}">Назад на главную</a>
+        <a href="{% url 'products:homepage' %}">Назад на главную</a>
     </p>
 </div>
 {% endblock %}

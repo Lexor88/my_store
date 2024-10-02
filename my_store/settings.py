@@ -29,7 +29,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))  # Загружаем фа�
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY", default="django-insecure-@_h9_84=&4t8)ct5*s3%y764duo3t!k%g66x1ui$&#bxr$0jzf")
+SECRET_KEY = env(
+    "SECRET_KEY",
+    default="django-insecure-@_h9_84=&4t8)ct5*s3%y764duo3t!k%g66x1ui$&#bxr$0jzf",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=True)
@@ -125,7 +128,9 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # Эта строка указывает на вашу статическую папку
-    BASE_DIR / "products" / "static",  # Указывает на статические файлы в приложении
+    BASE_DIR
+    / "products"
+    / "static",  # Указывает на статические файлы в приложении
 ]
 
 # Default primary key field type
@@ -140,7 +145,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 # Настройки почтового сервера
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = env("EMAIL_HOST", default="smtp.yandex.com")
-EMAIL_PORT = env.int("EMAIL_PORT", default=587)  # Используем int для целочисленного значения
+EMAIL_PORT = env.int(
+    "EMAIL_PORT", default=587
+)  # Используем int для целочисленного значения
 EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
@@ -152,6 +159,10 @@ print("EMAIL_HOST_PASSWORD:", EMAIL_HOST_PASSWORD)
 
 AUTH_USER_MODEL = "users.User"
 # Это URL, куда перенаправлять пользователей после входа
-LOGIN_REDIRECT_URL = "homepage"
+LOGIN_REDIRECT_URL = "products:homepage"
 # Это URL, куда перенаправлять пользователей после выхода
-LOGOUT_REDIRECT_URL = "homepage"
+LOGOUT_REDIRECT_URL = "products:homepage"
+
+SITE_URL = "http://127.0.0.1:8000"
+
+LOGIN_URL = "users:login"

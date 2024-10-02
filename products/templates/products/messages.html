@@ -1,7 +1,7 @@
 {% if messages %}
-    <div>
+    <div class="mt-2"> <!-- Добавлен класс отступа -->
         {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} mt-2">  <!-- Динамически устанавливаем класс сообщения -->
+            <div class="alert alert-{{ message.tags }} mt-2">
                 {{ message }}
             </div>
         {% endfor %}

@@ -14,12 +14,12 @@
         <strong>Пожалуйста, исправьте следующие ошибки:</strong>
         <ul>
             {% for field in form %}
-                {% for error in field.errors %}
-                    <li>{{ field.label }}: {{ error }}</li>
-                {% endfor %}
+            {% for error in field.errors %}
+            <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
             {% endfor %}
             {% for error in form.non_field_errors %}
-                <li>{{ error }}</li>
+            <li>{{ error }}</li>
             {% endfor %}
         </ul>
     </div>
@@ -44,6 +44,6 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Сохранить</button>
-    <a href="{% url 'blog_list' %}" class="btn btn-secondary">Отмена</a>
+    <a href="{% url 'products:blog_list' %}" class="btn btn-secondary">Отмена</a>
 </form>
 {% endblock %}

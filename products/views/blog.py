@@ -1,12 +1,18 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 from django.utils.text import slugify
-from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from products.models import BlogPost
 from products.forms import BlogPostForm
 from products.utils import send_letter_about_reaching_certain_number_of_views
 from smtplib import SMTPException
+
 
 # Отображение списка блогов
 class BlogPostListView(ListView):
@@ -16,7 +22,10 @@ class BlogPostListView(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        return BlogPost.objects.filter(is_published=True).order_by("-created_at")
+        return BlogPost.objects.filter(is_published=True).order_by(
+            "-created_at"
+        )
+
 
 # Детальное отображение блога с увеличением счетчика просмотров
 class BlogPostDetailView(DetailView):
@@ -30,20 +39,27 @@ class BlogPostDetailView(DetailView):
 
         if obj.views == 100:
             try:
-                send_letter_about_reaching_certain_number_of_views(obj.id, obj.views)
+                send_letter_about_reaching_certain_number_of_views(
+                    obj.id, obj.views
+                )
             except SMTPException as e:
-                messages.error(self.request, f"Ошибка SMTP при отправке письма: {e}")
+                messages.error(
+                    self.request, f"Ошибка SMTP при отправке письма: {e}"
+                )
             except Exception as e:
-                messages.error(self.request, f"Общая ошибка при отправке письма: {e}")
+                messages.error(
+                    self.request, f"Общая ошибка при отправке письма: {e}"
+                )
 
         return obj
+
 
 # Создание нового блога
 class BlogPostCreateView(CreateView):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "products/blog_form.html"
-    success_url = reverse_lazy("blog_list")
+    success_url = reverse_lazy("products:blog_list")
 
     def form_valid(self, form):
         blog_post = form.save(commit=False)
@@ -63,6 +79,7 @@ class BlogPostCreateView(CreateView):
             unique_slug = f"{slug}-{counter}"
             counter += 1
         return unique_slug
+
 
 # Редактирование блога
 class BlogPostUpdateView(UpdateView):
@@ -91,6 +108,7 @@ class BlogPostUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("blog_detail", kwargs={"slug": self.object.slug})
+
 
 # Удаление блога
 class BlogPostDeleteView(DeleteView):

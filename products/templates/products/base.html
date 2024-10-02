@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Магазин{% endblock %}</title>
-    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">  <!-- Добавляем иконку сайта -->
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">  <!-- Иконка сайта -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">  <!-- Подключаем CSS файл -->
@@ -15,16 +15,24 @@
     <!-- Включаем меню -->
     {% include 'products/menu.html' %}
 
-    <div class="container">
+    <div class="container mt-4">
         <!-- Блок для сообщений -->
-        {% include 'products/messages.html' %}
+        {% if messages %}
+            <div>
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
         <!-- Блок для контента -->
         {% block content %}
         {% endblock %}
     </div>
 
-    <!-- Подключаем скрипты Bootstrap и jQuery, если они требуются -->
+    <!-- Подключаем скрипты Bootstrap и jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

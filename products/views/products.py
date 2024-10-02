@@ -1,5 +1,11 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
@@ -25,8 +31,16 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        products_with_versions = []
+
         for product in context["products"]:
-            product.active_version = product.versions.filter(is_current_version=True).first()
+            product_data = {
+                "product": product,
+                "active_version": product.active_version,  # Получаем активную версию
+            }
+            products_with_versions.append(product_data)
+
+        context["products_with_versions"] = products_with_versions
         return context
 
 
@@ -36,13 +50,23 @@ class ProductDetailView(DetailView):
     template_name = "products/product_detail.html"
     context_object_name = "product"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        # Найти текущую версию продукта
+        current_version = product.versions.filter(
+            is_current_version=True
+        ).first()
+        context["active_version"] = current_version
+        return context
+
 
 # Создание нового продукта
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = "products/add_product.html"
-    success_url = reverse_lazy("homepage")
+    success_url = reverse_lazy("products:homepage")
 
     def get_form_kwargs(self):
         """Передаем текущего пользователя в форму."""
@@ -66,12 +90,17 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         """Проверяем, имеет ли пользователь права на редактирование продукта."""
         product = self.get_object()  # Получаем объект продукта
-        return self.request.user == product.owner or self.request.user.has_perm('products.can_change_product')
+        return (
+            self.request.user == product.owner
+            or self.request.user.has_perm("products.can_change_product")
+        )
 
     def get_success_url(self):
         """Возвращаем URL для перенаправления после успешного обновления."""
         messages.success(self.request, "Продукт успешно обновлен!")
-        return reverse_lazy("product_detail", kwargs={"slug": self.object.slug})  # Убедитесь, что slug работает
+        return reverse_lazy(
+            "products:product_detail", kwargs={"slug": self.object.slug}
+        )  # Убедитесь, что slug работает
 
     def get_form_kwargs(self):
         """Передаем текущего пользователя в форму."""
@@ -84,12 +113,15 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     template_name = "products/product_confirm_delete.html"
-    success_url = reverse_lazy("homepage")
+    success_url = reverse_lazy("products:homepage")
 
     def test_func(self):
         """Проверяем, имеет ли пользователь права на удаление продукта."""
         product = self.get_object()
-        return self.request.user == product.owner or self.request.user.has_perm('products.can_delete_product')
+        return (
+            self.request.user == product.owner
+            or self.request.user.has_perm("products.can_delete_product")
+        )
 
     def delete(self, request, *args, **kwargs):
         """Удаляем продукт и отправляем сообщение об успехе."""
@@ -100,19 +132,27 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         """Проверяем статус публикации для обычных пользователей."""
         product = super().get_object(queryset)
         if not product.is_published and not (
-                self.request.user.has_perm('products.can_publish_product') or self.request.user == product.owner):
+            self.request.user.has_perm("products.can_publish_product")
+            or self.request.user == product.owner
+        ):
             raise Http404("Этот продукт не опубликован.")
         return product
 
 
 @login_required
-def publish_product(request, pk):
+def publish_product(request, slug):
     """Переключаем статус публикации продукта."""
-    product = get_object_or_404(Product, pk=pk)
-    if not request.user.has_perm('products.can_publish_product'):
-        return HttpResponseForbidden("У вас нет прав на изменение статуса публикации.")
+    product = get_object_or_404(
+        Product, slug=slug
+    )  # Используем slug вместо pk
+    if not request.user.has_perm("products.can_publish_product"):
+        return HttpResponseForbidden(
+            "У вас нет прав на изменение статуса публикации."
+        )
 
     product.is_published = not product.is_published
     product.save()
     messages.success(request, "Статус публикации продукта изменен.")
-    return redirect('product_detail', slug=product.slug)
+    return redirect(
+        "products:product_detail", slug=product.slug
+    )  # Указываем пространство имен 'products'

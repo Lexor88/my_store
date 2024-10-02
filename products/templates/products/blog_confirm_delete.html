@@ -10,5 +10,5 @@
     {% csrf_token %}
     <button type="submit">Да, удалить</button>
 </form>
-<a href="{% url 'blog_detail' blog_post.slug %}">Отмена</a>
+<a href="{% url 'products:blog_detail' blog_post.slug %}">Отмена</a>
 {% endblock %}

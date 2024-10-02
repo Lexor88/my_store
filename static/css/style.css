@@ -188,3 +188,16 @@ h1, h2, h5 {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
 }
+
+/* Убираем стандартную окраску полей с ошибками */
+.form-control.is-invalid {
+    background-color: white;
+    border-color: #dc3545; /* Красный цвет рамки для обозначения ошибки */
+}
+
+/* Опционально: изменяем цвет текста на черный */
+.form-control.is-invalid:focus {
+    color: black;
+    background-color: white;
+    border-color: #dc3545;
+}

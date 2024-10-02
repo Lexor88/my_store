@@ -7,5 +7,5 @@
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Удалить</button>
 </form>
-<a href="{% url 'homepage' %}" class="btn btn-secondary">Отмена</a>
+<a href="{% url 'products:homepage' %}" class="btn btn-secondary">Отмена</a>
 {% endblock %}

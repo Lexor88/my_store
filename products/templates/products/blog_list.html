@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container">
     <h1 class="text-light text-center mb-4">Блог</h1>
-    <a href="{% url 'blog_create' %}" class="btn btn-primary mb-3">Добавить новую статью</a>
+    <a href="{% url 'products:blog_create' %}" class="btn btn-primary mb-3">Добавить новую статью</a>
 
     <!-- Форма фильтров и сортировки -->
     <form method="GET" class="mb-4">
@@ -32,7 +32,7 @@
     <div class="row">
         {% for blog_post in blog_posts %}
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card bg-dark text-light h-100"> <!-- Заменяем на h-100 для равного размера карточек -->
+            <div class="card bg-dark text-light h-100">
                 {% if blog_post.preview_image %}
                     <img src="{{ blog_post.preview_image.url }}" alt="{{ blog_post.title }}"
                          class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
@@ -42,15 +42,15 @@
                 {% endif %}
                 <div class="card-body">
                     <h5>
-                        <a href="{% url 'blog_detail' blog_post.slug %}" class="text-info">{{ blog_post.title }}</a>
+                        <a href="{% url 'products:blog_detail' blog_post.slug %}" class="text-info">{{ blog_post.title }}</a>
                     </h5>
                     <p>{{ blog_post.content|slice:":200" }}...</p>
                     <p>Дата публикации: {{ blog_post.created_at|date:"d.m.Y" }}</p>
                     <p>Просмотры: {{ blog_post.views }}</p>
                     <div>
                         {% if perms.products.can_manage_blog or request.user == blog_post.owner %}
-                            <a href="{% url 'blog_update' blog_post.slug %}" class="btn btn-warning btn-sm">Редактировать</a>
-                            <a href="{% url 'blog_delete' blog_post.slug %}" class="btn btn-danger btn-sm">Удалить</a>
+                            <a href="{% url 'products:blog_update' blog_post.slug %}" class="btn btn-warning btn-sm">Редактировать</a>
+                            <a href="{% url 'products:blog_delete' blog_post.slug %}" class="btn btn-danger btn-sm">Удалить</a>
                         {% endif %}
                     </div>
                 </div>

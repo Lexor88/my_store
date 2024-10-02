@@ -8,9 +8,9 @@
     <h1 class="display-4">Добро пожаловать в магазин!</h1>
     <p class="lead">LEXOR</p>
     <div class="mb-3">
-        <a href="{% url 'blog_list' %}" class="btn btn-info">Блог</a>
-        <a href="{% url 'add_product' %}" class="btn btn-success">Добавить новый продукт</a>
-        <a href="{% url 'add_version' %}" class="btn btn-warning">Добавить новую версию</a>
+        <a href="{% url 'products:blog_list' %}" class="btn btn-info">Блог</a>
+        <a href="{% url 'products:add_product' %}" class="btn btn-success">Добавить новый продукт</a>
+        <a href="{% url 'products:add_version' %}" class="btn btn-warning">Добавить новую версию</a>
     </div>
 </div>
 
@@ -69,48 +69,50 @@
     <h2 class="text-light">Наши товары</h2>
 
     {% if not request.user.is_authenticated %}
-        <p class="text-danger">Для того чтобы увидеть наши машины, войдите в аккаунт.</p>
+    <p class="text-danger">Для того чтобы увидеть наши машины, войдите в аккаунт.</p>
     {% else %}
-        <div class="row">
-            {% for product in products %}
-                {% if product.is_published or perms.products.can_publish_product or request.user == product.owner %}
-                    <div class="col-12 mb-4">
-                        <div class="card" style="height: auto;">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 500px; object-fit: cover;">
-                            {% else %}
-                                <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available" style="height: 500px; object-fit: cover;">
-                            {% endif %}
-
-                            <div class="card-body">
-                                <h5 class="card-title">{{ product.name }}</h5>
-                                <p class="card-text">{{ product.description|slice:":150" }}...</p>
-                                <p class="card-text"><strong>Цена:</strong> ${{ product.price }}</p>
-
-                                {% if product.active_version %}
-                                    <p class="card-text">Текущая версия: {{ product.active_version.version_name }} (v{{ product.active_version.version_number }})</p>
-                                {% else %}
-                                    <p class="card-text text-danger">Нет текущей версии</p>
-                                {% endif %}
-
-                                <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary">Подробнее</a>
-                            </div>
-                        </div>
-                    </div>
+    <div class="row">
+        {% for product in products %}
+        {% if product.is_published or perms.products.can_publish_product or request.user == product.owner %}
+        <div class="col-12 mb-4">
+            <div class="card" style="height: auto;">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
+                     style="height: 500px; object-fit: cover;">
+                {% else %}
+                <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available"
+                     style="height: 500px; object-fit: cover;">
                 {% endif %}
-            {% empty %}
-                <p class="text-light">Товары отсутствуют.</p>
-            {% endfor %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|slice:":150" }}...</p>
+                    <p class="card-text"><strong>Цена:</strong> ${{ product.price }}</p>
+
+                    {% if product.active_version %}
+                    <p class="card-text">Текущая версия: {{ product.active_version.version_name }} (v{{ product.active_version.version_number }})</p>
+                    {% else %}
+                    <p class="card-text text-danger">Нет текущей версии</p>
+                    {% endif %}
+
+                    <a href="{% url 'products:product_detail' product.slug %}" class="btn btn-primary">Подробнее</a>
+                </div>
+            </div>
         </div>
+        {% endif %}
+        {% empty %}
+        <p class="text-light">Товары отсутствуют.</p>
+        {% endfor %}
+    </div>
     {% endif %}
 </div>
 
 <!-- Блок для пагинации -->
 <div class="pagination text-center mt-4">
     <span class="step-links">
-        {% if products.has_previous %}
+        {% if page_obj.has_previous %}
             <a href="?page=1" class="btn btn-secondary">Первая</a>
-            <a href="?page={{ products.previous_page_number }}" class="btn btn-secondary">Назад</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Назад</a>
         {% endif %}
 
         {% for num in products.paginator.page_range %}
@@ -121,9 +123,9 @@
             {% endif %}
         {% endfor %}
 
-        {% if products.has_next %}
-            <a href="?page={{ products.next_page_number }}" class="btn btn-secondary">Вперед</a>
-            <a href="?page={{ products.paginator.num_pages }}" class="btn btn-secondary">Последняя</a>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Вперед</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Последняя</a>
         {% endif %}
     </span>
 </div>
