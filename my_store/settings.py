@@ -7,6 +7,7 @@ import environ
 env = environ.Env(
     EMAIL_HOST_USER=(str, "default@example.com"),
     EMAIL_HOST_PASSWORD=(str, "default_password"),
+    CACHE_LOCATION=(str, "redis://127.0.0.1:6379/1"),  # Добавлена переменная окружения для CACHE_LOCATION
 )
 
 # Путь к файлу .env
@@ -16,7 +17,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env(
     "SECRET_KEY",
-    default="django-insecure-@_h9_84=&4t8)ct5*s3%y764duo3t!k%g66x1ui$&#bxr$0jzf",
+    default=get_random_secret_key(),  # Генерация секретного ключа по умолчанию
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -35,9 +36,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "products",
     "users",
+    'mailing_service',
 ]
 
 MIDDLEWARE = [
+    "django.middleware.cache.UpdateCacheMiddleware",  # Для кеширования запросов
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -45,6 +48,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.cache.FetchFromCacheMiddleware",  # Для кеширования ответов
 ]
 
 ROOT_URLCONF = "my_store.urls"
@@ -151,17 +155,11 @@ print(f"SECURE_SSL_REDIRECT: {SECURE_SSL_REDIRECT}")
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Отладка: печать значений переменных окружения (только для разработки)
-if DEBUG:
-    print("EMAIL_HOST_USER:", EMAIL_HOST_USER)
-    print("EMAIL_HOST_PASSWORD:", EMAIL_HOST_PASSWORD)
-
-# settings.py
-
+# Настройки кеширования
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",  # Используем Redis на порту 6379
+        "LOCATION": env("CACHE_LOCATION"),  # Используем переменную окружения для LOCATION
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -172,33 +170,6 @@ CACHES = {
 # Настройка сессий для использования кеша Redis
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
-
-# settings.py
-
-# Кеширование с использованием Redis
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-    }
-}
-
-# Кеширование всего сайта
-MIDDLEWARE = [
-    "django.middleware.cache.UpdateCacheMiddleware",  # Добавляем в начало для кеширования запросов
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.middleware.cache.FetchFromCacheMiddleware",  # Добавляем в конец для кеширования ответов
-]
-
 
 # Общая продолжительность кеширования всего сайта (в секундах)
 CACHE_MIDDLEWARE_SECONDS = 60 * 15  # 15 минут
