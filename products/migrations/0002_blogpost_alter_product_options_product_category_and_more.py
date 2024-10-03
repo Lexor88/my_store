@@ -57,9 +57,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "is_published",
-                    models.BooleanField(
-                        default=False, verbose_name="Опубликован"
-                    ),
+                    models.BooleanField(default=False, verbose_name="Опубликован"),
                 ),
                 (
                     "views",
@@ -104,9 +102,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="product",
             name="is_published",
-            field=models.BooleanField(
-                default=False, verbose_name="Опубликован"
-            ),
+            field=models.BooleanField(default=False, verbose_name="Опубликован"),
         ),
         migrations.AddField(
             model_name="product",
@@ -133,9 +129,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="product",
             name="updated_at",
-            field=models.DateTimeField(
-                auto_now=True, verbose_name="Дата изменения"
-            ),
+            field=models.DateTimeField(auto_now=True, verbose_name="Дата изменения"),
         ),
         migrations.AlterField(
             model_name="product",
@@ -178,21 +172,15 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "version_name",
-                    models.CharField(
-                        max_length=100, verbose_name="Название версии"
-                    ),
+                    models.CharField(max_length=100, verbose_name="Название версии"),
                 ),
                 (
                     "version_number",
-                    models.CharField(
-                        max_length=10, verbose_name="Номер версии"
-                    ),
+                    models.CharField(max_length=10, verbose_name="Номер версии"),
                 ),
                 (
                     "is_current_version",
-                    models.BooleanField(
-                        default=False, verbose_name="Текущая версия"
-                    ),
+                    models.BooleanField(default=False, verbose_name="Текущая версия"),
                 ),
                 (
                     "product",

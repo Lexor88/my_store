@@ -6,7 +6,9 @@ from .forms import CustomUserChangeForm, UserRegistrationForm
 
 class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
-    add_form = UserRegistrationForm  # Используем форму для регистрации нового пользователя
+    add_form = (
+        UserRegistrationForm  # Используем форму для регистрации нового пользователя
+    )
 
     model = User
     list_display = (

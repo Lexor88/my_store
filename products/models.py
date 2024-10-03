@@ -12,9 +12,7 @@ class Product(models.Model):
         max_length=200, unique=True, blank=True, verbose_name="URL-адрес"
     )
     description = models.TextField(verbose_name="Описание")
-    price = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Цена"
-    )
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
     image = models.ImageField(
         upload_to="product_images/",
         blank=True,
@@ -27,18 +25,14 @@ class Product(models.Model):
     created_at = models.DateTimeField(
         default=timezone.now, verbose_name="Дата создания"
     )
-    updated_at = models.DateTimeField(
-        auto_now=True, verbose_name="Дата изменения"
-    )
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата изменения")
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="products",
         verbose_name="Владелец",
     )
-    is_published = models.BooleanField(
-        default=False, verbose_name="Опубликован"
-    )
+    is_published = models.BooleanField(default=False, verbose_name="Опубликован")
 
     class Meta:
         permissions = [
@@ -55,9 +49,7 @@ class Product(models.Model):
             raise ValidationError("Цена не может быть отрицательной.")
         # Проверка уникальности slug перед сохранением
         if Product.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
-            raise ValidationError(
-                "Продукт с таким URL-адресом уже существует."
-            )
+            raise ValidationError("Продукт с таким URL-адресом уже существует.")
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -84,15 +76,9 @@ class BlogPost(models.Model):
         blank=True,
         verbose_name="Изображение превью",
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name="Дата создания"
-    )
-    is_published = models.BooleanField(
-        default=False, verbose_name="Опубликован"
-    )
-    views = models.PositiveIntegerField(
-        default=0, verbose_name="Количество просмотров"
-    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    is_published = models.BooleanField(default=False, verbose_name="Опубликован")
+    views = models.PositiveIntegerField(default=0, verbose_name="Количество просмотров")
 
     def __str__(self):
         return self.title
@@ -115,11 +101,7 @@ class BlogPost(models.Model):
                     f"Использование слова '{word}' в заголовке запрещено."
                 )
         # Проверка уникальности slug перед сохранением
-        if (
-            BlogPost.objects.filter(slug=self.slug)
-            .exclude(pk=self.pk)
-            .exists()
-        ):
+        if BlogPost.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
             raise ValidationError("Блог с таким URL-адресом уже существует.")
 
     def save(self, *args, **kwargs):
@@ -142,12 +124,8 @@ class Version(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Продукт",
     )
-    version_name = models.CharField(
-        max_length=100, verbose_name="Название версии"
-    )
-    version_number = models.CharField(
-        max_length=10, verbose_name="Номер версии"
-    )
+    version_name = models.CharField(max_length=100, verbose_name="Название версии")
+    version_number = models.CharField(max_length=10, verbose_name="Номер версии")
     is_current_version = models.BooleanField(
         default=False, verbose_name="Текущая версия"
     )
@@ -164,4 +142,21 @@ class Version(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()  # Запускаем полную валидацию модели перед сохранением
+        super().save(*args, **kwargs)
+
+
+class Category(models.Model):
+    name = models.CharField(
+        max_length=100, unique=True, verbose_name="Название категории"
+    )
+    slug = models.SlugField(
+        max_length=100, unique=True, blank=True, verbose_name="URL-адрес категории"
+    )
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
         super().save(*args, **kwargs)

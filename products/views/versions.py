@@ -14,17 +14,15 @@ class VersionCreateView(LoginRequiredMixin, CreateView):
     model = Version
     form_class = VersionForm
     template_name = "products/version_form.html"
-    success_url = reverse_lazy("homepage")
+    success_url = reverse_lazy("products:homepage")
 
     def form_valid(self, form):
         product = form.cleaned_data["product"]
         # Снять отметку с текущей версии, если есть
-        Version.objects.filter(
-            product=product, is_current_version=True
-        ).update(is_current_version=False)
-        messages.success(
-            self.request, "Новая версия продукта успешно создана!"
+        Version.objects.filter(product=product, is_current_version=True).update(
+            is_current_version=False
         )
+        messages.success(self.request, "Новая версия продукта успешно создана!")
         return super().form_valid(form)
 
 
@@ -46,23 +44,21 @@ class VersionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         product = form.cleaned_data["product"]
         is_current = form.cleaned_data.get("is_current_version", False)
         if is_current:
-            Version.objects.filter(
-                product=product, is_current_version=True
-            ).update(is_current_version=False)
+            Version.objects.filter(product=product, is_current_version=True).update(
+                is_current_version=False
+            )
         messages.success(self.request, "Версия продукта успешно обновлена!")
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy(
-            "products:product_detail", slug=self.object.product.slug
-        )
+        return reverse_lazy("products:product_detail", slug=self.object.product.slug)
 
 
 # Удаление версии продукта
 class VersionDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Version
     template_name = "products/version_confirm_delete.html"
-    success_url = reverse_lazy("homepage")
+    success_url = reverse_lazy("products:homepage")
 
     def test_func(self):
         version = self.get_object()
@@ -94,9 +90,7 @@ class SetActiveVersionView(LoginRequiredMixin, View):
             return HttpResponseForbidden("У вас нет прав на изменение версии.")
 
         # Установить все версии продукта как неактивные
-        Version.objects.filter(product=version.product).update(
-            is_current_version=False
-        )
+        Version.objects.filter(product=version.product).update(is_current_version=False)
 
         # Установить выбранную версию как активную
         version.is_current_version = True

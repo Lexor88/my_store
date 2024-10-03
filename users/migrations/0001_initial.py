@@ -45,9 +45,7 @@ class Migration(migrations.Migration):
                 ("email", models.EmailField(max_length=254, unique=True)),
                 (
                     "avatar",
-                    models.ImageField(
-                        blank=True, null=True, upload_to="avatars/"
-                    ),
+                    models.ImageField(blank=True, null=True, upload_to="avatars/"),
                 ),
                 (
                     "phone_number",

@@ -16,7 +16,7 @@
         {% if object.image %}
             <img src="{{ object.image.url }}" alt="{{ object.name }}" class="product-image img-fluid">
         {% else %}
-            <img src="{% static 'default-image.jpg' %}" alt="Изображение недоступно" class="product-image img-fluid">
+            <img src="{% static 'images/default-image-v1.jpg' %}" alt="Изображение недоступно" class="product-image img-fluid">
         {% endif %}
 
         {% if object.active_version %}

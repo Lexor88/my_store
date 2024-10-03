@@ -1,0 +1,17 @@
+<!-- products/templates/products/category_list.html -->
+
+<h1>Список категорий</h1>
+
+{% if categories %}
+    <ul>
+        {% for category in categories %}
+            <li>
+                <a href="{% url 'products:category_detail' category.slug %}">
+                    {{ category.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Категории не найдены.</p>
+{% endif %}

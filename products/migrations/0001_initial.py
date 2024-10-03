@@ -30,9 +30,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "image",
-                    models.ImageField(
-                        blank=True, null=True, upload_to="products/"
-                    ),
+                    models.ImageField(blank=True, null=True, upload_to="products/"),
                 ),
             ],
         ),

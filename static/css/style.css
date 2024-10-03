@@ -201,3 +201,12 @@ h1, h2, h5 {
     background-color: white;
     border-color: #dc3545;
 }
+
+#category {
+    color: black; /* Измените цвет текста */
+    background-color: white; /* Фон селектора */
+}
+
+#category option {
+    color: black; /* Цвет текста в выпадающем списке */
+}

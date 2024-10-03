@@ -18,14 +18,14 @@
 <div id="promoCarousel" class="carousel slide mb-4" data-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="{% static 'images/promo1.jpg' %}" class="d-block w-100" alt="Акция 1">
+            <img src="{% static 'images/promo1-v1.jpg' %}" class="d-block w-100" alt="Акция 1">
             <div class="carousel-caption d-none d-md-block">
                 <h5>Специальное предложение!</h5>
                 <p>Скидки до 50% на новые модели!</p>
             </div>
         </div>
         <div class="carousel-item">
-            <img src="{% static 'images/promo2.jpg' %}" class="d-block w-100" alt="Акция 2">
+            <img src="{% static 'images/promo2-v1.jpg' %}" class="d-block w-100" alt="Акция 2">
             <div class="carousel-caption d-none d-md-block">
                 <h5>Новинки месяца!</h5>
                 <p>Не упустите шанс первыми увидеть новые поступления!</p>
@@ -49,10 +49,14 @@
             <label for="category">Категория</label>
             <select name="category" id="category" class="form-control">
                 <option value="">Все категории</option>
-                <option value="автомобили">Автомобили</option>
-                <option value="мотоциклы">Мотоциклы</option>
+                {% for category in categories %}
+                    <option value="{{ category.slug }}" {% if category.slug == selected_category %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
             </select>
         </div>
+
         <div class="form-group">
             <label for="sort">Сортировать по</label>
             <select name="sort" id="sort" class="form-control">
@@ -69,41 +73,39 @@
     <h2 class="text-light">Наши товары</h2>
 
     {% if not request.user.is_authenticated %}
-    <p class="text-danger">Для того чтобы увидеть наши машины, войдите в аккаунт.</p>
+        <p class="text-danger">Для того чтобы увидеть наши машины, войдите в аккаунт.</p>
     {% else %}
-    <div class="row">
-        {% for product in products %}
-        {% if product.is_published or perms.products.can_publish_product or request.user == product.owner %}
-        <div class="col-12 mb-4">
-            <div class="card" style="height: auto;">
-                {% if product.image %}
-                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
-                     style="height: 500px; object-fit: cover;">
-                {% else %}
-                <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available"
-                     style="height: 500px; object-fit: cover;">
+        <div class="row">
+            {% for product in products %}
+                {% if product.is_published or perms.products.can_publish_product or request.user == product.owner %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 300px; object-fit: cover;">
+                            {% else %}
+                                <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available" style="height: 300px; object-fit: cover;">
+                            {% endif %}
+
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text">{{ product.description|slice:":150" }}...</p>
+                                <p class="card-text"><strong>Цена:</strong> ${{ product.price }}</p>
+
+                                {% if product.active_version %}
+                                    <p class="card-text">Текущая версия: {{ product.active_version.version_name }} (v{{ product.active_version.version_number }})</p>
+                                {% else %}
+                                    <p class="card-text text-danger">Нет текущей версии</p>
+                                {% endif %}
+
+                                <a href="{% url 'products:product_detail' product.slug %}" class="btn btn-primary">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
                 {% endif %}
-
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text">{{ product.description|slice:":150" }}...</p>
-                    <p class="card-text"><strong>Цена:</strong> ${{ product.price }}</p>
-
-                    {% if product.active_version %}
-                    <p class="card-text">Текущая версия: {{ product.active_version.version_name }} (v{{ product.active_version.version_number }})</p>
-                    {% else %}
-                    <p class="card-text text-danger">Нет текущей версии</p>
-                    {% endif %}
-
-                    <a href="{% url 'products:product_detail' product.slug %}" class="btn btn-primary">Подробнее</a>
-                </div>
-            </div>
+            {% empty %}
+                <p class="text-light">Товары отсутствуют.</p>
+            {% endfor %}
         </div>
-        {% endif %}
-        {% empty %}
-        <p class="text-light">Товары отсутствуют.</p>
-        {% endfor %}
-    </div>
     {% endif %}
 </div>
 
@@ -115,10 +117,10 @@
             <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Назад</a>
         {% endif %}
 
-        {% for num in products.paginator.page_range %}
-            {% if products.number == num %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
                 <span class="btn btn-secondary active">{{ num }}</span>
-            {% elif num > products.number|add:'-2' and num < products.number|add:'2' %}
+            {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
                 <a href="?page={{ num }}" class="btn btn-secondary">{{ num }}</a>
             {% endif %}
         {% endfor %}

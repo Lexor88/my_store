@@ -1,5 +1,3 @@
-from django.urls import path
-
 # Импорт представлений из отдельных модулей
 from .views.products import (
     ProductListView,
@@ -23,6 +21,9 @@ from .views.versions import (
     SetActiveVersionView,
 )
 from .views.contact import ContactView
+
+from django.urls import path
+from .views import category_list
 
 # Добавляем пространство имен для приложения 'products'
 app_name = "products"
@@ -56,9 +57,7 @@ urlpatterns = [
     # Маршруты для блога
     path("blog/", BlogPostListView.as_view(), name="blog_list"),
     path("blog/create/", BlogPostCreateView.as_view(), name="blog_create"),
-    path(
-        "blog/<slug:slug>/", BlogPostDetailView.as_view(), name="blog_detail"
-    ),
+    path("blog/<slug:slug>/", BlogPostDetailView.as_view(), name="blog_detail"),
     path(
         "blog/<slug:slug>/update/",
         BlogPostUpdateView.as_view(),
@@ -89,4 +88,5 @@ urlpatterns = [
         SetActiveVersionView.as_view(),
         name="set_active_version",
     ),
+    path("categories/", category_list, name="category_list"),
 ]

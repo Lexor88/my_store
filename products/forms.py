@@ -1,5 +1,6 @@
 from django import forms
 from .models import Product, BlogPost, Version
+from django.utils.text import slugify
 
 
 class ProductForm(forms.ModelForm):
@@ -82,9 +83,7 @@ class BlogPostForm(forms.ModelForm):
     def clean_content(self):
         content = self.cleaned_data.get("content")
         if len(content) < 20:
-            raise forms.ValidationError(
-                "Контент должен содержать минимум 20 символов."
-            )
+            raise forms.ValidationError("Контент должен содержать минимум 20 символов.")
         return content
 
 
@@ -119,13 +118,9 @@ class VersionForm(forms.ModelForm):
 
         if (
             is_current
-            and Version.objects.filter(
-                product=product, is_current_version=True
-            )
+            and Version.objects.filter(product=product, is_current_version=True)
             .exclude(pk=self.instance.pk)
             .exists()
         ):
-            raise forms.ValidationError(
-                "У этого продукта уже есть текущая версия."
-            )
+            raise forms.ValidationError("У этого продукта уже есть текущая версия.")
         return cleaned_data

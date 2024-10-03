@@ -18,7 +18,5 @@ urlpatterns = [
     path("profile/edit/", edit_profile, name="edit_profile"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("verify-email/<uidb64>/<token>/", verify_email, name="verify_email"),
-    path(
-        "email-sent/", email_sent, name="email_sent"
-    ),  # Добавляем этот маршрут
+    path("email-sent/", email_sent, name="email_sent"),  # Добавляем этот маршрут
 ]

@@ -1,0 +1,203 @@
+/* Общие стили для страницы */
+body {
+    background: linear-gradient(135deg, #0e0e0e, #1c1c1c);
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Стили контейнера с фоновым изображением */
+.container {
+    background: rgba(50, 50, 50, 0.9) url("{% static 'images/background.jpg.jpg' %}") no-repeat center center;
+    background-size: cover; /* Позволяет изображению покрывать весь контейнер */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+}
+
+/* Стили заголовков */
+h1, h2, h5 {
+    color: #f0f0f0;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Стили карточек */
+.card {
+    background: rgba(30, 30, 30, 0.95);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Изменено на 100% для лучшего выравнивания */
+}
+
+.card-body {
+    padding: 20px; /* Увеличенные отступы для тела карточки */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card img {
+    width: 100%;
+    height: 300px; /* Увеличенная высота для изображения */
+    object-fit: cover; /* Обрезаем изображение, сохраняя его пропорции */
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+.card:hover img {
+    transform: scale(1.05);
+}
+
+/* Стили кнопок */
+.btn {
+    background-color: #0072ff;
+    color: white;
+    border-radius: 30px;
+    padding: 12px 24px;
+    border: none;
+    transition: background-color 0.3s, transform 0.3s;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #005bb5;
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* Стили форм */
+.form-control {
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #0072ff;
+    box-shadow: 0 0 5px rgba(0, 114, 255, 0.5);
+}
+
+/* Пагинация */
+.pagination .current {
+    color: #0072ff;
+}
+
+/* Переходы для всех элементов */
+* {
+    transition: all 0.3s ease;
+}
+
+/* Стили для страницы деталей продукта */
+.product-detail {
+    background: rgba(50, 50, 50, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+}
+
+.product-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Кнопка "Назад" */
+.back-button {
+    margin-top: 20px;
+    background-color: #0072ff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background-color: #005bb5;
+}
+
+/* Дополнительные стили для формы выбора версии продукта */
+.card-footer {
+    padding: 15px;
+    background: rgba(20, 20, 20, 0.8);
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.form-check-label {
+    color: #f0f0f0;
+}
+
+/* Адаптивные стили для экранов меньшей ширины */
+@media (max-width: 768px) {
+    .card img {
+        height: 200px; /* Изменяем высоту изображения для мобильных устройств */
+    }
+
+    .container {
+        padding: 20px; /* Уменьшаем отступы на мобильных устройствах */
+    }
+
+    .card {
+        height: auto; /* Позволяет карточкам быть более гибкими на мобильных устройствах */
+    }
+}
+
+.blog-detail {
+    background: rgba(50, 50, 50, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+}
+
+/* Стили для изображений в блоге */
+.blog-detail img {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Стили для кнопок социальных сетей */
+.social-share a {
+    margin-right: 10px; /* Отступ между кнопками */
+}
+
+.card {
+    border: none; /* Убираем рамку */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+/* Убираем стандартную окраску полей с ошибками */
+.form-control.is-invalid {
+    background-color: white;
+    border-color: #dc3545; /* Красный цвет рамки для обозначения ошибки */
+}
+
+/* Опционально: изменяем цвет текста на черный */
+.form-control.is-invalid:focus {
+    color: black;
+    background-color: white;
+    border-color: #dc3545;
+}

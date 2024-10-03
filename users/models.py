@@ -30,32 +30,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
 
-    is_active = models.BooleanField(
-        default=False
-    )  # По умолчанию юзер неактивен
+    is_active = models.BooleanField(default=False)  # По умолчанию юзер неактивен
     is_staff = models.BooleanField(default=False)
 
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = (
-        []
-    )  # Поля, которые должны быть указаны при создании пользователя
+    REQUIRED_FIELDS = []  # Поля, которые должны быть указаны при создании пользователя
 
     def __str__(self):
         return self.email  # Удобное представление пользователя
 
     def clean(self):
         # Валидация номера телефона
-        if self.phone_number and not re.match(
-            r"^\+?1?\d{9,15}$", self.phone_number
-        ):
+        if self.phone_number and not re.match(r"^\+?1?\d{9,15}$", self.phone_number):
             raise ValidationError(
                 "Неверный формат номера телефона. Используйте формат: +1234567890 или 1234567890."
             )
 
         # Валидация страны
         if self.country and len(self.country) < 2:
-            raise ValidationError(
-                "Страна должна содержать как минимум 2 символа."
-            )
+            raise ValidationError("Страна должна содержать как минимум 2 символа.")

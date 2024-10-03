@@ -12,6 +12,8 @@ from products.models import BlogPost
 from products.forms import BlogPostForm
 from products.utils import send_letter_about_reaching_certain_number_of_views
 from smtplib import SMTPException
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 
 
 # Отображение списка блогов
@@ -22,9 +24,7 @@ class BlogPostListView(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        return BlogPost.objects.filter(is_published=True).order_by(
-            "-created_at"
-        )
+        return BlogPost.objects.filter(is_published=True).order_by("-created_at")
 
 
 # Детальное отображение блога с увеличением счетчика просмотров
@@ -39,22 +39,17 @@ class BlogPostDetailView(DetailView):
 
         if obj.views == 100:
             try:
-                send_letter_about_reaching_certain_number_of_views(
-                    obj.id, obj.views
-                )
+                send_letter_about_reaching_certain_number_of_views(obj.id, obj.views)
             except SMTPException as e:
-                messages.error(
-                    self.request, f"Ошибка SMTP при отправке письма: {e}"
-                )
+                messages.error(self.request, f"Ошибка SMTP при отправке письма: {e}")
             except Exception as e:
-                messages.error(
-                    self.request, f"Общая ошибка при отправке письма: {e}"
-                )
+                messages.error(self.request, f"Общая ошибка при отправке письма: {e}")
 
         return obj
 
 
-# Создание нового блога
+# Создание нового блога (отключение кеширования)
+@method_decorator(never_cache, name="dispatch")
 class BlogPostCreateView(CreateView):
     model = BlogPost
     form_class = BlogPostForm
@@ -81,7 +76,8 @@ class BlogPostCreateView(CreateView):
         return unique_slug
 
 
-# Редактирование блога
+# Редактирование блога (отключение кеширования)
+@method_decorator(never_cache, name="dispatch")
 class BlogPostUpdateView(UpdateView):
     model = BlogPost
     form_class = BlogPostForm
@@ -110,7 +106,8 @@ class BlogPostUpdateView(UpdateView):
         return reverse_lazy("blog_detail", kwargs={"slug": self.object.slug})
 
 
-# Удаление блога
+# Удаление блога (отключение кеширования)
+@method_decorator(never_cache, name="dispatch")
 class BlogPostDeleteView(DeleteView):
     model = BlogPost
     template_name = "products/blog_confirm_delete.html"
