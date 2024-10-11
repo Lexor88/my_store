@@ -7,10 +7,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def start():
     scheduler = BackgroundScheduler()
     scheduler.add_job(send_mailing, "interval", minutes=1)  # Каждый 1 минуту
     scheduler.start()
+
 
 def send_mailing():
     current_datetime = timezone.now()
@@ -30,8 +32,14 @@ def send_mailing():
             )
             logger.info(f"Рассылка '{mailing.message.subject}' успешно отправлена.")
             # Здесь можно создать запись о попытке рассылки
-            MailingAttempt.objects.create(mailing=mailing, status='success', response="Mail sent successfully")
+            MailingAttempt.objects.create(
+                mailing=mailing, status="success", response="Mail sent successfully"
+            )
         except Exception as e:
-            logger.error(f"Ошибка при отправке рассылки '{mailing.message.subject}': {str(e)}")
+            logger.error(
+                f"Ошибка при отправке рассылки '{mailing.message.subject}': {str(e)}"
+            )
             # Создаем запись о неудачной попытке рассылки
-            MailingAttempt.objects.create(mailing=mailing, status='failure', response=str(e))
+            MailingAttempt.objects.create(
+                mailing=mailing, status="failure", response=str(e)
+            )

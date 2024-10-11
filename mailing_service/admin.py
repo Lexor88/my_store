@@ -7,14 +7,19 @@ from django.core.exceptions import ObjectDoesNotExist
 class MailingAdmin(admin.ModelAdmin):
     list_display = ["message", "start_date", "status", "owner"]  # Добавили владельца
     list_filter = ["status", "periodicity"]  # Фильтры по статусу и периодичности
-    search_fields = ["message__subject", "owner__email"]  # Поиск по теме сообщения и email владельца
+    search_fields = [
+        "message__subject",
+        "owner__email",
+    ]  # Поиск по теме сообщения и email владельца
     ordering = ["-start_date"]  # Сортировка по дате начала (новые сначала)
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        if request.user.groups.filter(name='Managers').exists():
+        if request.user.groups.filter(name="Managers").exists():
             return qs  # Менеджеры видят все рассылки
-        return qs.filter(owner=request.user)  # Обычные пользователи видят только свои рассылки
+        return qs.filter(
+            owner=request.user
+        )  # Обычные пользователи видят только свои рассылки
 
 
 @admin.register(Message)
@@ -33,4 +38,7 @@ class ClientAdmin(admin.ModelAdmin):
 class MailingAttemptAdmin(admin.ModelAdmin):
     list_display = ["mailing", "timestamp", "status"]
     list_filter = ["status"]  # Фильтр по статусу
-    search_fields = ["mailing__message__subject", "status"]  # Поиск по теме сообщения рассылки и статусу
+    search_fields = [
+        "mailing__message__subject",
+        "status",
+    ]  # Поиск по теме сообщения рассылки и статусу

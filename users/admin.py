@@ -6,8 +6,11 @@ from .forms import CustomUserChangeForm, UserRegistrationForm
 
 class CustomUserAdmin(UserAdmin):
     """Кастомный админ-класс для модели пользователя."""
+
     form = CustomUserChangeForm
-    add_form = UserRegistrationForm  # Используем форму для регистрации нового пользователя
+    add_form = (
+        UserRegistrationForm  # Используем форму для регистрации нового пользователя
+    )
 
     model = User
     list_display = (
@@ -22,14 +25,27 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {"fields": ("email", "password", "avatar", "phone_number", "country")}),
-        ("Permissions", {"fields": ("is_staff", "is_active", "groups", "user_permissions")}),
+        (
+            "Permissions",
+            {"fields": ("is_staff", "is_active", "groups", "user_permissions")},
+        ),
     )
 
     add_fieldsets = (
-        (None, {
-            "classes": ("wide",),
-            "fields": ("email", "password1", "password2", "is_staff", "is_active", "groups"),
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "email",
+                    "password1",
+                    "password2",
+                    "is_staff",
+                    "is_active",
+                    "groups",
+                ),
+            },
+        ),
     )
 
     def get_fieldsets(self, request, obj=None):

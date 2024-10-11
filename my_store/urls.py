@@ -13,7 +13,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),  # Подключение админки
     path("", include("products.urls")),  # Подключаем маршруты из приложения products
     path("users/", include("users.urls")),  # Подключаем маршруты из приложения users
-    path("mailings/", include("mailing_service.urls")),  # Подключаем маршруты из приложения mailing_service
+    path(
+        "mailings/", include("mailing_service.urls")
+    ),  # Подключаем маршруты из приложения mailing_service
     path(
         "product/<slug:slug>/",
         cache_page(60 * 15)(ProductDetailView.as_view()),

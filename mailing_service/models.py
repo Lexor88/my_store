@@ -3,12 +3,18 @@ from django.utils import timezone
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
+
 class Client(models.Model):
     email = models.EmailField(unique=True, verbose_name="Электронная почта")
     name = models.CharField(max_length=100, verbose_name="Имя")
     full_name = models.CharField(max_length=255, verbose_name="Полное имя")
     comment = models.TextField(blank=True, null=True, verbose_name="Комментарий")
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="clients", verbose_name="Владелец")
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="clients",
+        verbose_name="Владелец",
+    )
 
     class Meta:
         verbose_name = "Клиент"
@@ -21,7 +27,12 @@ class Client(models.Model):
 class Message(models.Model):
     subject = models.CharField(max_length=255, verbose_name="Тема")
     body = models.TextField(verbose_name="Текст сообщения")
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="messages", verbose_name="Владелец")
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="messages",
+        verbose_name="Владелец",
+    )
 
     class Meta:
         verbose_name = "Сообщение"
@@ -44,10 +55,19 @@ class Mailing(models.Model):
         default="day",
         verbose_name="Периодичность",
     )
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="created", verbose_name="Статус")
-    message = models.OneToOneField(Message, on_delete=models.CASCADE, verbose_name="Сообщение")
+    status = models.CharField(
+        max_length=10, choices=STATUS_CHOICES, default="created", verbose_name="Статус"
+    )
+    message = models.OneToOneField(
+        Message, on_delete=models.CASCADE, verbose_name="Сообщение"
+    )
     clients = models.ManyToManyField(Client, verbose_name="Клиенты")
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="mailings", verbose_name="Владелец")
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="mailings",
+        verbose_name="Владелец",
+    )
 
     def clean(self):
         # Проверка на то, что дата начала рассылки в будущем
@@ -63,9 +83,15 @@ class Mailing(models.Model):
 
 
 class MailingAttempt(models.Model):
-    mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name="Рассылка")
+    mailing = models.ForeignKey(
+        Mailing, on_delete=models.CASCADE, verbose_name="Рассылка"
+    )
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Время попытки")
-    status = models.CharField(max_length=10, choices=[("success", "Успешно"), ("failure", "Неуспешно")], verbose_name="Статус")
+    status = models.CharField(
+        max_length=10,
+        choices=[("success", "Успешно"), ("failure", "Неуспешно")],
+        verbose_name="Статус",
+    )
     response = models.TextField(verbose_name="Ответ")
 
     class Meta:

@@ -34,8 +34,14 @@ urlpatterns = [
     path("products/add/", ProductCreateView.as_view(), name="add_product"),
     # Маршруты для товаров
     path("products/<slug:slug>/", ProductDetailView.as_view(), name="product_detail"),
-    path("products/<slug:slug>/edit/", ProductUpdateView.as_view(), name="edit_product"),
-    path("products/<slug:slug>/delete/", ProductDeleteView.as_view(), name="delete_product"),
+    path(
+        "products/<slug:slug>/edit/", ProductUpdateView.as_view(), name="edit_product"
+    ),
+    path(
+        "products/<slug:slug>/delete/",
+        ProductDeleteView.as_view(),
+        name="delete_product",
+    ),
     path("products/<slug:slug>/publish/", publish_product, name="publish_product"),
     # Маршруты для блога
     path("blog/", BlogPostListView.as_view(), name="blog_list"),
@@ -48,8 +54,14 @@ urlpatterns = [
     # Маршруты для версий продукта
     path("version/add/", VersionCreateView.as_view(), name="add_version"),
     path("version/<slug:slug>/edit/", VersionUpdateView.as_view(), name="edit_version"),
-    path("version/<slug:slug>/delete/", VersionDeleteView.as_view(), name="delete_version"),
+    path(
+        "version/<slug:slug>/delete/",
+        VersionDeleteView.as_view(),
+        name="delete_version",
+    ),
     # Маршрут для установки активной версии
-    path("set_active_version/", SetActiveVersionView.as_view(), name="set_active_version"),
+    path(
+        "set_active_version/", SetActiveVersionView.as_view(), name="set_active_version"
+    ),
     path("categories/", category_list, name="category_list"),
 ]

@@ -22,21 +22,36 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password=None, **extra_fields):
         """Создание суперпользователя."""
-        extra_fields.setdefault("is_staff", True)  # Суперпользователь имеет доступ в админку
-        extra_fields.setdefault("is_superuser", True)  # У суперпользователя есть все права
-        extra_fields.setdefault("is_active", True)  # Убедитесь, что суперпользователь активен
+        extra_fields.setdefault(
+            "is_staff", True
+        )  # Суперпользователь имеет доступ в админку
+        extra_fields.setdefault(
+            "is_superuser", True
+        )  # У суперпользователя есть все права
+        extra_fields.setdefault(
+            "is_active", True
+        )  # Убедитесь, что суперпользователь активен
         return self.create_user(email, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Кастомная модель пользователя."""
+
     email = models.EmailField(unique=True)  # Уникальный адрес электронной почты
-    avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)  # Аватар пользователя
-    phone_number = models.CharField(max_length=15, null=True, blank=True)  # Номер телефона
-    country = models.CharField(max_length=100, null=True, blank=True)  # Страна пользователя
+    avatar = models.ImageField(
+        upload_to="avatars/", null=True, blank=True
+    )  # Аватар пользователя
+    phone_number = models.CharField(
+        max_length=15, null=True, blank=True
+    )  # Номер телефона
+    country = models.CharField(
+        max_length=100, null=True, blank=True
+    )  # Страна пользователя
 
     is_active = models.BooleanField(default=True)  # По умолчанию юзер активен
-    is_staff = models.BooleanField(default=False)  # Может ли пользователь заходить в админку
+    is_staff = models.BooleanField(
+        default=False
+    )  # Может ли пользователь заходить в админку
 
     objects = UserManager()  # Присваиваем менеджер
 

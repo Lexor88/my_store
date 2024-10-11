@@ -26,12 +26,14 @@ def register(request):
         form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             # Проверка на существование пользователя
-            if User.objects.filter(email=form.cleaned_data['email']).exists():
+            if User.objects.filter(email=form.cleaned_data["email"]).exists():
                 messages.error(request, "Пользователь с таким email уже существует.")
                 return redirect("users:register")
 
             user = form.save(commit=False)
-            user.is_active = False  # Делаем пользователя неактивным до подтверждения email
+            user.is_active = (
+                False  # Делаем пользователя неактивным до подтверждения email
+            )
             user.save()
 
             # Отправляем письмо для подтверждения email
@@ -51,8 +53,13 @@ def register(request):
 
             send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
-            messages.info(request, "На ваш email отправлено письмо для подтверждения. Проверьте свою почту.")
-            return redirect("users:email_sent")  # Перенаправляем на страницу с уведомлением об отправке email
+            messages.info(
+                request,
+                "На ваш email отправлено письмо для подтверждения. Проверьте свою почту.",
+            )
+            return redirect(
+                "users:email_sent"
+            )  # Перенаправляем на страницу с уведомлением об отправке email
     else:
         form = UserRegistrationForm()
 
@@ -72,10 +79,14 @@ def verify_email(request, uidb64, token):
         user.is_active = True
         user.save()
 
-        messages.success(request, "Ваш email успешно подтвержден. Теперь вы можете войти в систему.")
+        messages.success(
+            request, "Ваш email успешно подтвержден. Теперь вы можете войти в систему."
+        )
         return redirect("users:login")
     else:
-        messages.error(request, "Ссылка для подтверждения недействительна или устарела.")
+        messages.error(
+            request, "Ссылка для подтверждения недействительна или устарела."
+        )
         return redirect("users:register")
 
 
@@ -101,7 +112,9 @@ def reset_password(request):
         email = request.POST.get("email")
         try:
             user = User.objects.get(email=email)
-            new_password = "".join(random.choices(string.ascii_letters + string.digits, k=8))
+            new_password = "".join(
+                random.choices(string.ascii_letters + string.digits, k=8)
+            )
             user.set_password(new_password)
             user.save()
             send_mail(
@@ -136,7 +149,9 @@ def user_create(request):
             messages.error(request, "Пользователь с таким именем уже существует.")
             return redirect("users:user_create")
 
-        user = User.objects.create_user(username=username, email=email, password=password)
+        user = User.objects.create_user(
+            username=username, email=email, password=password
+        )
         messages.success(request, "Пользователь успешно создан!")
         return redirect("users:user_list")
     return render(request, "users/user_form.html")

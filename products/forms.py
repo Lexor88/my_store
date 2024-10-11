@@ -8,10 +8,10 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ["name", "description", "price", "image"]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control"}),
+            "price": forms.NumberInput(attrs={"class": "form-control"}),
+            "image": forms.ClearableFileInput(attrs={"class": "form-control"}),
         }
 
     # Список запрещенных слов
@@ -67,10 +67,10 @@ class BlogPostForm(forms.ModelForm):
         model = BlogPost
         fields = ["title", "content", "preview_image", "is_published"]
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'content': forms.Textarea(attrs={'class': 'form-control'}),
-            'preview_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'is_published': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "content": forms.Textarea(attrs={"class": "form-control"}),
+            "preview_image": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "is_published": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 
     def clean_title(self):
@@ -93,10 +93,12 @@ class VersionForm(forms.ModelForm):
         model = Version
         fields = ["product", "version_number", "version_name", "is_current_version"]
         widgets = {
-            'product': forms.Select(attrs={'class': 'form-control'}),
-            'version_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'version_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'is_current_version': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            "product": forms.Select(attrs={"class": "form-control"}),
+            "version_number": forms.TextInput(attrs={"class": "form-control"}),
+            "version_name": forms.TextInput(attrs={"class": "form-control"}),
+            "is_current_version": forms.CheckboxInput(
+                attrs={"class": "form-check-input"}
+            ),
         }
 
     def clean_version_number(self):

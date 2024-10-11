@@ -7,9 +7,12 @@ import environ
 env = environ.Env(
     EMAIL_HOST_USER=(str, "default@example.com"),
     EMAIL_HOST_PASSWORD=(str, "default_password"),
-    CACHE_LOCATION=(str, "redis://127.0.0.1:6379/1"),  # Добавлена переменная окружения для CACHE_LOCATION
+    CACHE_LOCATION=(
+        str,
+        "redis://127.0.0.1:6379/1",
+    ),  # Добавлена переменная окружения для CACHE_LOCATION
 )
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = "users.User"
 
 # Путь к файлу .env
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -152,7 +155,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("CACHE_LOCATION"),  # Используем переменную окружения для LOCATION
+        "LOCATION": env(
+            "CACHE_LOCATION"
+        ),  # Используем переменную окружения для LOCATION
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
