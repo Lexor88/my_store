@@ -8,23 +8,38 @@
 
     <!-- Если есть ошибки, выводим их здесь -->
     {% if form.errors %}
-    <div class="alert alert-danger">
-        <strong>Пожалуйста, исправьте следующие ошибки:</strong>
-        <ul>
-            {% for field in form %}
-            {% for error in field.errors %}
-            <li>{{ field.label }}: {{ error }}</li>
-            {% endfor %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    </div>
+        <div class="alert alert-danger">
+            <strong>Пожалуйста, исправьте следующие ошибки:</strong>
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 
     <!-- Отображаем форму с классами Bootstrap -->
-    {{ form.as_p }}
+    <div class="mb-3">
+        {{ form.name.label_tag }}  <!-- Метка для названия -->
+        {{ form.name|add_class:"form-control" }}  <!-- Применяем класс Bootstrap -->
+    </div>
+    <div class="mb-3">
+        {{ form.description.label_tag }}  <!-- Метка для описания -->
+        {{ form.description|add_class:"form-control" }}  <!-- Применяем класс Bootstrap -->
+    </div>
+    <div class="mb-3">
+        {{ form.price.label_tag }}  <!-- Метка для цены -->
+        {{ form.price|add_class:"form-control" }}  <!-- Применяем класс Bootstrap -->
+    </div>
+    <div class="mb-3">
+        {{ form.image.label_tag }}  <!-- Метка для изображения -->
+        {{ form.image|add_class:"form-control" }}  <!-- Применяем класс Bootstrap -->
+    </div>
 
     <button type="submit" class="btn btn-primary">Сохранить</button>
     <a href="{% url 'products:homepage' %}" class="btn btn-secondary">Отмена</a> <!-- Кнопка для отмены -->

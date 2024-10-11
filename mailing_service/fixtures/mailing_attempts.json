@@ -1,0 +1,22 @@
+[
+    {
+        "model": "mailing_service.mailingattempt",
+        "pk": 1,
+        "fields": {
+            "mailing": 1,
+            "timestamp": "2024-10-10T10:05:00Z",
+            "status": "success",
+            "response": "Рассылка успешно отправлена."
+        }
+    },
+    {
+        "model": "mailing_service.mailingattempt",
+        "pk": 2,
+        "fields": {
+            "mailing": 1,
+            "timestamp": "2024-10-10T10:10:00Z",
+            "status": "failure",
+            "response": "Ошибка отправки рассылки."
+        }
+    }
+]

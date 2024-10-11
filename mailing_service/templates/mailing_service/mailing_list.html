@@ -1,0 +1,23 @@
+<h1>Список рассылок</h1>
+
+<a href="{% url 'mailing_service:mailing_create' %}" class="btn btn-primary mb-3">Создать рассылку</a>
+
+<ul class="list-group mb-4">
+    {% for mailing in mailings %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="{% url 'mailing_service:mailing_detail' mailing.pk %}" class="text-decoration-none">
+                {{ mailing.message.subject }} - Статус: {{ mailing.get_status_display }}
+            </a>
+            <div>
+                <a href="{% url 'mailing_service:mailing_update' mailing.pk %}" class="btn btn-warning btn-sm">Изменить</a>
+                <a href="{% url 'mailing_service:mailing_delete' mailing.pk %}" class="btn btn-danger btn-sm ml-2">Удалить</a>
+            </div>
+        </li>
+    {% empty %}
+        <li class="list-group-item">Нет рассылок.</li>
+    {% endfor %}
+</ul>
+
+<div class="alert alert-info" role="alert">
+    <strong>Совет:</strong> Если вы не видите свои рассылки, убедитесь, что вы создали их ранее!
+</div>

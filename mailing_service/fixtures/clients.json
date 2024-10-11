@@ -1,0 +1,20 @@
+[
+    {
+        "model": "mailing_service.client",
+        "pk": 1,
+        "fields": {
+            "email": "client@example.com",
+            "full_name": "John Doe",
+            "comment": "Test client"
+        }
+    },
+    {
+        "model": "mailing_service.client",
+        "pk": 2,
+        "fields": {
+            "email": "jane.doe@example.com",
+            "full_name": "Jane Doe",
+            "comment": "Another test client"
+        }
+    }
+]

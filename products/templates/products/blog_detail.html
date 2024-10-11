@@ -18,10 +18,8 @@
 
     <!-- Социальные кнопки для поделиться -->
     <div class="social-share mb-3">
-        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-primary">Поделиться
-            на Facebook</a>
-        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ blog_post.title }}"
-           class="btn btn-info">Твитнуть</a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-primary" target="_blank">Поделиться на Facebook</a>
+        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ blog_post.title }}" class="btn btn-info" target="_blank">Твитнуть</a>
     </div>
 
     {% if perms.products.can_manage_blog or request.user == blog_post.owner %}

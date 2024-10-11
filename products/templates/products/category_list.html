@@ -3,9 +3,9 @@
 <h1>Список категорий</h1>
 
 {% if categories %}
-    <ul>
+    <ul class="list-group">
         {% for category in categories %}
-            <li>
+            <li class="list-group-item">
                 <a href="{% url 'products:category_detail' category.slug %}">
                     {{ category.name }}
                 </a>
@@ -13,5 +13,5 @@
         {% endfor %}
     </ul>
 {% else %}
-    <p>Категории не найдены.</p>
+    <p class="text-muted">Категории не найдены.</p>
 {% endif %}

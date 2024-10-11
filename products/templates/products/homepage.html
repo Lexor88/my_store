@@ -43,6 +43,35 @@
 </div>
 
 <div class="container">
+    <!-- Статистика рассылок -->
+    <h2 class="text-center">Статистика рассылок</h2>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Всего рассылок</h5>
+                    <p class="card-text">{{ total_mailings_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Активные рассылки</h5>
+                    <p class="card-text">{{ active_mailings_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Уникальные клиенты</h5>
+                    <p class="card-text">{{ unique_clients_count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Форма фильтров и сортировки -->
     <form method="GET" class="mb-4">
         <div class="form-group">
@@ -83,7 +112,7 @@
                             {% if product.image %}
                                 <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 300px; object-fit: cover;">
                             {% else %}
-                                <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available" style="height: 300px; object-fit: cover;">
+                                <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="Нет изображения" style="height: 300px; object-fit: cover;">
                             {% endif %}
 
                             <div class="card-body">
@@ -107,6 +136,27 @@
             {% endfor %}
         </div>
     {% endif %}
+</div>
+
+<!-- Блок для отображения случайных статей из блога -->
+<div class="container mt-5">
+    <h2 class="text-center">Случайные статьи из блога</h2>
+    <div class="row">
+        {% for post in random_blog_posts %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.content|truncatewords:20 }}</p>
+                        <a href="{% url 'products:blog_detail' post.slug %}" class="btn btn-primary">Читать далее</a>
+
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-light">Нет статей для отображения.</p>
+        {% endfor %}
+    </div>
 </div>
 
 <!-- Блок для пагинации -->

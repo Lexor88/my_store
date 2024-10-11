@@ -37,6 +37,7 @@ class UserRegistrationForm(UserCreationForm):
 
         if commit:
             user.save()
+            self.send_verification_email(user)  # Отправка письма после сохранения пользователя
 
         return user
 
@@ -46,7 +47,7 @@ class UserRegistrationForm(UserCreationForm):
         verification_url = reverse(
             "users:verify_email", kwargs={"uidb64": uid, "token": token}
         )
-        full_url = f"{settings.SITE_URL}{verification_url}"
+        full_url = f"{settings.SITE_URL}{verification_url}"  # Убедитесь, что SITE_URL настроен
 
         subject = "Подтверждение вашей электронной почты"
         message = f"Пожалуйста, подтвердите свою электронную почту, перейдя по ссылке: {full_url}"

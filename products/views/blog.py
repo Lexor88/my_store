@@ -103,7 +103,7 @@ class BlogPostUpdateView(UpdateView):
         return unique_slug
 
     def get_success_url(self):
-        return reverse_lazy("blog_detail", kwargs={"slug": self.object.slug})
+        return reverse_lazy("products:blog_detail", kwargs={"slug": self.object.slug})
 
 
 # Удаление блога (отключение кеширования)
@@ -111,7 +111,7 @@ class BlogPostUpdateView(UpdateView):
 class BlogPostDeleteView(DeleteView):
     model = BlogPost
     template_name = "products/blog_confirm_delete.html"
-    success_url = reverse_lazy("blog_list")
+    success_url = reverse_lazy("products:blog_list")
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Блог успешно удален!")

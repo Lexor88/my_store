@@ -10,7 +10,7 @@
 {% if messages %}
     <div>
         {% for message in messages %}
-            <div class="alert {{ message.tags }}">  <!-- Динамически устанавливаем класс сообщения -->
+            <div class="alert alert-{{ message.tags }}">  <!-- Динамически устанавливаем класс сообщения -->
                 {{ message }}
             </div>
         {% endfor %}
@@ -29,7 +29,7 @@
     </div>
     <div class="mb-3">
         <label for="message">Сообщение:</label>
-        <textarea id="message" name="message" required class="form-control"></textarea>
+        <textarea id="message" name="message" required class="form-control" rows="5"></textarea>
     </div>
     <button type="submit" class="btn btn-primary">Отправить</button>
 </form>

@@ -7,6 +7,12 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ["name", "description", "price", "image"]
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
 
     # Список запрещенных слов
     forbidden_words = [
@@ -24,10 +30,6 @@ class ProductForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.update(
-                {"class": "form-control"}
-            )  # Добавляем класс для всех полей
 
     def save(self, commit=True):
         product = super().save(commit=False)
@@ -64,13 +66,12 @@ class BlogPostForm(forms.ModelForm):
     class Meta:
         model = BlogPost
         fields = ["title", "content", "preview_image", "is_published"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.update(
-                {"class": "form-control"}
-            )  # Добавляем класс для всех полей
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
+            'preview_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'is_published': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
 
     def clean_title(self):
         title = self.cleaned_data.get("title")
@@ -90,20 +91,13 @@ class BlogPostForm(forms.ModelForm):
 class VersionForm(forms.ModelForm):
     class Meta:
         model = Version
-        fields = [
-            "product",
-            "version_number",
-            "version_name",
-            "is_current_version",
-        ]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.update({"class": "form-control"})
-        self.fields["is_current_version"].widget.attrs.update(
-            {"class": "form-check-input"}
-        )
+        fields = ["product", "version_number", "version_name", "is_current_version"]
+        widgets = {
+            'product': forms.Select(attrs={'class': 'form-control'}),
+            'version_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'version_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'is_current_version': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
 
     def clean_version_number(self):
         version_number = self.cleaned_data.get("version_number")

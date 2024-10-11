@@ -20,7 +20,7 @@
         {% if messages %}
             <div>
                 {% for message in messages %}
-                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} mt-2">
                         {{ message }}
                     </div>
                 {% endfor %}

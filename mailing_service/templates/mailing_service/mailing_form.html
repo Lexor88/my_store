@@ -1,0 +1,40 @@
+{% extends 'products/base.html' %}
+
+{% block title %}{{ mailing.subject|default:"Создание рассылки" }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ mailing.subject|default:"Создание рассылки" }}</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="subject">Тема рассылки:</label>
+            <input type="text" name="subject" class="form-control" id="subject" value="{{ mailing.subject|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="message">Сообщение:</label>
+            <textarea name="message" class="form-control" id="message" rows="5" required>{{ mailing.message.body|default:'' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="start_date">Дата начала:</label>
+            <input type="datetime-local" name="start_date" class="form-control" id="start_date" value="{{ mailing.start_date|date:'Y-m-d\TH:i'|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="periodicity">Периодичность:</label>
+            <select name="periodicity" class="form-control" id="periodicity" required>
+                <option value="day" {% if mailing.periodicity == 'day' %}selected{% endif %}>Ежедневно</option>
+                <option value="week" {% if mailing.periodicity == 'week' %}selected{% endif %}>Еженедельно</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">{{ mailing.subject|default:"Создать рассылку" }}</button>
+    </form>
+
+    <a href="{% url 'mailing_service:mailing_list' %}" class="btn btn-secondary mt-3">Назад к списку рассылок</a>
+</div>
+{% endblock %}

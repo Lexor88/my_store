@@ -16,6 +16,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, Http404
 from products.services import get_categories
 from django.views.decorators.cache import cache_page
+from mailing_service.models import Client, Mailing
+from products.models import BlogPost
 
 
 # Отображение главной страницы с товарами
@@ -51,11 +53,17 @@ class ProductListView(ListView):
             }
             products_with_versions.append(product_data)
 
+        context['mailings'] = Mailing.objects.all()  # Получаем все рассылки
+        context['active_mailings_count'] = Mailing.objects.filter(status='running').count()
+        context['total_mailings_count'] = Mailing.objects.count()
+        context['unique_clients_count'] = Client.objects.count()  # Получаем количество уникальных клиентов
         context["products_with_versions"] = products_with_versions
         context["categories"] = get_categories()  # Добавляем категории в контекст
-        context["selected_category"] = self.request.GET.get(
-            "category", ""
-        )  # Добавляем выбранную категорию
+        context["selected_category"] = self.request.GET.get("category", "")  # Добавляем выбранную категорию
+
+        # Получаем три случайные статьи из блога
+        context['random_blog_posts'] = BlogPost.objects.order_by('?')[:3]  # Добавляем три случайные статьи
+
         return context
 
 
@@ -144,8 +152,8 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         """Проверяем статус публикации для обычных пользователей."""
         product = super().get_object(queryset)
         if not product.is_published and not (
-            self.request.user.has_perm("products.can_publish_product")
-            or self.request.user == product.owner
+                self.request.user.has_perm("products.can_publish_product")
+                or self.request.user == product.owner
         ):
             raise Http404("Этот продукт не опубликован.")
         return product

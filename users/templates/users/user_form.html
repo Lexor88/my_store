@@ -1,0 +1,32 @@
+{% extends 'products/base.html' %}
+
+{% block title %}{{ user.username|default:"Создание пользователя" }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ user.username|default:"Создание пользователя" }}</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Имя пользователя:</label>
+            <input type="text" name="username" class="form-control" id="username" value="{{ user.username|default:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email" class="form-control" id="email" value="{{ user.email|default:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" name="password" class="form-control" id="password" {% if user %}placeholder="Оставьте пустым, если не хотите менять"{% endif %}>
+        </div>
+        <button type="submit" class="btn btn-success">{{ user.username|default:"Создать пользователя" }}</button>
+    </form>
+
+    {% if user %}
+    <a href="{% url 'users:user_list' %}" class="btn btn-secondary mt-3">Назад к списку пользователей</a>
+    {% else %}
+    <a href="{% url 'users:register' %}" class="btn btn-secondary mt-3">Назад к регистрации</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -6,13 +6,13 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
+            <li class="nav-item {% if request.path == '/' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'products:homepage' %}">Главная</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item {% if request.path == '/blog/' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'products:blog_list' %}">Блог</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item {% if request.path == '/contact/' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'products:contact' %}">Контакты</a>
             </li>
         </ul>

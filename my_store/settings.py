@@ -9,6 +9,7 @@ env = environ.Env(
     EMAIL_HOST_PASSWORD=(str, "default_password"),
     CACHE_LOCATION=(str, "redis://127.0.0.1:6379/1"),  # Добавлена переменная окружения для CACHE_LOCATION
 )
+AUTH_USER_MODEL = 'users.User'
 
 # Путь к файлу .env
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,11 +37,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "products",
     "users",
-    'mailing_service',
+    "mailing_service",
 ]
 
 MIDDLEWARE = [
-    "django.middleware.cache.UpdateCacheMiddleware",  # Для кеширования запросов
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -48,7 +48,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.middleware.cache.FetchFromCacheMiddleware",  # Для кеширования ответов
 ]
 
 ROOT_URLCONF = "my_store.urls"
@@ -125,12 +124,6 @@ DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default=EMAIL_HOST_USER)
 # Путь, куда перенаправлять пользователей после входа и выхода
 LOGIN_REDIRECT_URL = "products:homepage"
 LOGOUT_REDIRECT_URL = "products:homepage"
-
-# Пользовательская модель пользователя
-AUTH_USER_MODEL = "users.User"
-
-# URL для входа в систему
-LOGIN_URL = "users:login"
 
 # Настройки безопасности
 if not DEBUG:

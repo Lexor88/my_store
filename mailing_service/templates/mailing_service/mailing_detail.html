@@ -1,0 +1,27 @@
+<h1>Детали рассылки</h1>
+<div class="mb-4">
+    <p><strong>Тема:</strong> {{ mailing.message.subject }}</p>
+    <p><strong>Текст:</strong> {{ mailing.message.body }}</p>
+    <p><strong>Статус:</strong> {{ mailing.get_status_display }}</p>
+    <p><strong>Дата начала:</strong> {{ mailing.start_date|date:"d-m-Y H:i" }}</p>
+    <p><strong>Периодичность:</strong> {{ mailing.get_periodicity_display }}</p>
+</div>
+
+<div class="mb-4">
+    <h3>Клиенты:</h3>
+    {% if mailing.clients.exists %}
+        <ul class="list-group">
+            {% for client in mailing.clients.all %}
+                <li class="list-group-item">{{ client.email }} ({{ client.name }})</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет клиентов для этой рассылки.</p>
+    {% endif %}
+</div>
+
+<div class="mb-4">
+    <a href="{% url 'mailing_service:mailing_update' mailing.pk %}" class="btn btn-warning">Редактировать</a>
+    <a href="{% url 'mailing_service:mailing_delete' mailing.pk %}" class="btn btn-danger">Удалить</a>
+    <a href="{% url 'mailing_service:mailing_list' %}" class="btn btn-secondary">Назад к списку</a>
+</div>

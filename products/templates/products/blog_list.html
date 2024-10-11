@@ -14,8 +14,11 @@
             <label for="category">Категория</label>
             <select name="category" id="category" class="form-control">
                 <option value="">Все категории</option>
-                <option value="категория1">Категория 1</option>
-                <option value="категория2">Категория 2</option>
+                {% for category in categories %}
+                    <option value="{{ category.slug }}" {% if category.slug == selected_category %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
             </select>
         </div>
         <div class="form-group">

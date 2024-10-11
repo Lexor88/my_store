@@ -1,15 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Подтверждение электронной почты</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h2>Здравствуйте, {{ user.username }}!</h2>
-    <p>Спасибо за регистрацию на нашем сайте.</p>
-    <p>Пожалуйста, подтвердите свою электронную почту, перейдя по ссылке:</p>
-    <a href="http://{{ domain }}{% url 'users:verify_email' uidb64=uid token=token %}">
-        Подтвердить электронную почту
-    </a>
-    <p>Если вы не регистрировались на нашем сайте, проигнорируйте это письмо.</p>
+    <div class="container">
+        <h2>Здравствуйте, {{ user.username }}!</h2>
+        <p>Спасибо за регистрацию на нашем сайте.</p>
+        <p>Пожалуйста, подтвердите свою электронную почту, перейдя по ссылке:</p>
+        <a href="http://{{ domain }}{% url 'users:verify_email' uidb64=uid token=token %}">
+            Подтвердить электронную почту
+        </a>
+        <p>Если вы не регистрировались на нашем сайте, проигнорируйте это письмо.</p>
+    </div>
 </body>
 </html>

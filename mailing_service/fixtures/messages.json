@@ -1,0 +1,18 @@
+[
+    {
+        "model": "mailing_service.message",
+        "pk": 1,
+        "fields": {
+            "subject": "Тестовое сообщение",
+            "body": "Это тело тестового сообщения для рассылки."
+        }
+    },
+    {
+        "model": "mailing_service.message",
+        "pk": 2,
+        "fields": {
+            "subject": "Важное обновление",
+            "body": "У нас есть важные новости для вас."
+        }
+    }
+]

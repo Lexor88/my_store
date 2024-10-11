@@ -4,11 +4,11 @@
 
 {% block content %}
 <h2>Подтверждение удаления версии</h2>
-<p>Вы уверены, что хотите удалить версию "{{ object.version_name }}" (v{{ object.version_number }})?</p>
+<p>Вы уверены, что хотите удалить версию "{{ object.version_name }}" (v{{ object.version_number }})? Это действие нельзя будет отменить.</p>
 
 <form method="post">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Удалить</button>
-    <a href="{% url 'products:product_detail' object.slug %}" class="btn btn-secondary">Отмена</a>
+    <a href="{% url 'products:product_detail' object.product.slug %}" class="btn btn-secondary">Отмена</a>
 </form>
 {% endblock %}

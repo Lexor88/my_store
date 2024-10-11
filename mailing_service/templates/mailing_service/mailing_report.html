@@ -1,0 +1,40 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Отчет о рассылках{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Отчет о рассылках</h2>
+
+    {% if mailings %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Тема рассылки</th>
+                <th>Статус</th>
+                <th>Дата начала</th> <!-- Изменено на "Дата начала" -->
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mailing in mailings %}
+            <tr>
+                <td>{{ mailing.id }}</td>
+                <td>{{ mailing.message.subject }}</td> <!-- Изменено на сообщение -->
+                <td>{{ mailing.get_status_display }}</td> <!-- Используем метод получения статуса -->
+                <td>{{ mailing.start_date|date:"d-m-Y H:i" }}</td> <!-- Форматируем дату начала -->
+                <td>
+                    <a href="{% url 'mailing_service:mailing_detail' mailing.pk %}" class="btn btn-info">Просмотреть</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        Рассылки отсутствуют.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

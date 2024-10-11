@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import UserRegistrationForm, CustomUserChangeForm
 from .models import User
@@ -25,10 +25,13 @@ def register(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
+            # Проверка на существование пользователя
+            if User.objects.filter(email=form.cleaned_data['email']).exists():
+                messages.error(request, "Пользователь с таким email уже существует.")
+                return redirect("users:register")
+
             user = form.save(commit=False)
-            user.is_active = (
-                False  # Делаем пользователя неактивным до подтверждения email
-            )
+            user.is_active = False  # Делаем пользователя неактивным до подтверждения email
             user.save()
 
             # Отправляем письмо для подтверждения email
@@ -48,13 +51,8 @@ def register(request):
 
             send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
-            messages.info(
-                request,
-                "На ваш email отправлено письмо для подтверждения. Проверьте свою почту.",
-            )
-            return redirect(
-                "users:email_sent"
-            )  # Перенаправляем на страницу с уведомлением об отправке email
+            messages.info(request, "На ваш email отправлено письмо для подтверждения. Проверьте свою почту.")
+            return redirect("users:email_sent")  # Перенаправляем на страницу с уведомлением об отправке email
     else:
         form = UserRegistrationForm()
 
@@ -74,15 +72,10 @@ def verify_email(request, uidb64, token):
         user.is_active = True
         user.save()
 
-        messages.success(
-            request,
-            "Ваш email успешно подтвержден. Теперь вы можете войти в систему.",
-        )
+        messages.success(request, "Ваш email успешно подтвержден. Теперь вы можете войти в систему.")
         return redirect("users:login")
     else:
-        messages.error(
-            request, "Ссылка для подтверждения недействительна или устарела."
-        )
+        messages.error(request, "Ссылка для подтверждения недействительна или устарела.")
         return redirect("users:register")
 
 
@@ -108,9 +101,7 @@ def reset_password(request):
         email = request.POST.get("email")
         try:
             user = User.objects.get(email=email)
-            new_password = "".join(
-                random.choices(string.ascii_letters + string.digits, k=8)
-            )
+            new_password = "".join(random.choices(string.ascii_letters + string.digits, k=8))
             user.set_password(new_password)
             user.save()
             send_mail(
@@ -131,3 +122,50 @@ def reset_password(request):
 # Уведомление об отправке email
 def email_sent(request):
     return render(request, "users/email_sent.html")
+
+
+# Создание пользователя
+@login_required
+def user_create(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Пользователь с таким именем уже существует.")
+            return redirect("users:user_create")
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+        messages.success(request, "Пользователь успешно создан!")
+        return redirect("users:user_list")
+    return render(request, "users/user_form.html")
+
+
+# Список пользователей
+@login_required
+def user_list(request):
+    users = User.objects.all()
+    return render(request, "users/user_list.html", {"users": users})
+
+
+# Удаление пользователя
+@login_required
+def user_delete(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user.delete()
+    messages.success(request, "Пользователь успешно удален!")
+    return redirect("users:user_list")
+
+
+# Редактирование пользователя
+@login_required
+def user_update(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    if request.method == "POST":
+        user.username = request.POST.get("username")
+        user.email = request.POST.get("email")
+        user.save()
+        messages.success(request, "Пользователь успешно обновлен!")
+        return redirect("users:user_list")
+    return render(request, "users/user_form.html", {"user": user})

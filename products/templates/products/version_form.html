@@ -19,9 +19,8 @@
     {% csrf_token %}
     {{ form.as_p }}  <!-- Отображаем все поля формы -->
 
-    <!-- Добавляем кнопку для отправки формы -->
     <button type="submit" class="btn btn-primary">Сохранить</button>
 </form>
 
-<a href="{% url 'products:homepage' %}" class="btn btn-secondary">Назад</a>
+<a href="{% url 'products:product_detail' object.product.slug %}" class="btn btn-secondary">Назад к продукту</a>
 {% endblock %}
